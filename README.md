@@ -2,7 +2,7 @@
 
 <!-- **DESCRIPCIÓN:** Resumen tomado del documento ERS (alcance 1.2). -->
 
-EBOGE es un juego de mesa digital multijugador local desarrollado en Java. Los participantes (de 2 a 8) compiten por alcanzar la meta en un tablero generado de forma procedural.
+EBOGE es un juego de mesa multijugador local desarrollado en Java. Los participantes (de 2 a 8) compiten por alcanzar la meta en un tablero generado de forma procedural.
 
 Los jugadores avanzan lanzando un dado configurable (de 3 a 30 caras) y, dependiendo de la casilla, activan cartas de cuatro mazos diferentes: **Propia**, **Target**, **Global** y **Maestra**.
 
@@ -13,7 +13,7 @@ Los jugadores avanzan lanzando un dado configurable (de 3 a 30 caras) y, dependi
 
 -   **Lenguaje:** Java (JDK 21+)
     
--   **Interfaz Gráfica:** JavaFX (o Swing, según hayan usado)
+-   **Interfaz Gráfica:** Java Swing
     
 -   **Metodología:** Documentación ERS basada en el estándar IEEE Std 830-1998.
     
