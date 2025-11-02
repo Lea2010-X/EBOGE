@@ -1,4 +1,4 @@
-# 📄 Especificación de Requisitos de Software (ERS)  
+#Especificación de Requisitos de Software (ERS)  
 **Proyecto:** EBOGE  
 **Basado en:** IEEE Std 830-1998  
 
@@ -14,8 +14,8 @@ Este documento servirá como **base contractual y técnica** para el diseño, de
 
 ### 1.2 Alcance del sistema  
 **EBOGE** es un juego de mesa digital multijugador local en el que los participantes compiten por alcanzar la meta antes que sus oponentes.  
-El tablero se **genera de forma procedural**, permitiendo variaciones dinámicas en cada partida.  
-Cada jugador lanza un **dado configurable (de 3 a 30 caras)** para avanzar por el tablero.  
+Los jugadores lanza un **dado configurable (de 3 a 20 caras)** para avanzar por el tablero. 
+El tablero tiene un tamaño definido segun el numero de caras del dado y las casillas se general de forma aleatoria, permitiendo variaciones dinámicas en cada partida.   
 Según el tipo de casilla en que caiga, el sistema activa una carta de uno de los **cuatro mazos** disponibles:  
 - **Propia**  
 - **Target**  
@@ -40,6 +40,7 @@ Según el tipo de casilla en que caiga, el sistema activa una carta de uno de lo
 | **Turno** | Ciclo de juego: lanzamiento de dado → movimiento → resolución de efectos. |
 | **Dado N** | Dado configurable de *N* caras (3 ≤ N ≤ 30). |
 
+
 ---
 
 ### 1.4 Referencias  
@@ -53,8 +54,6 @@ El documento se estructura en cuatro secciones principales:
 1. Introducción y definiciones.  
 2. Descripción general del sistema.  
 3. Requisitos funcionales.  
-4. (Futuras extensiones opcionales o requisitos no funcionales).
-
 ---
 
 ## 2. Descripción general
@@ -64,14 +63,14 @@ EBOGE es un **software de escritorio autónomo**, ejecutable en una sola máquin
 No depende de red ni servidores externos.  
 Su núcleo se basa en:  
 - Un **motor de turnos**,  
-- Un **generador procedural de mapas**,  
+- Un **sistema de generacion aleatorio de casillas**,  
 - Un **sistema modular de cartas**.
 
 ---
 
 ### 2.2 Funciones del producto  
 - Configuración inicial de partida (jugadores, dado, generación del mapa).  
-- Generación procedural del tablero con casillas normales, de restricción y especiales.  
+- Generación aleatoria  de casillas normales, de restricción y especiales.  
 - Gestión automática del orden de turnos.  
 - Lanzamiento de dado y movimiento del jugador.  
 - Activación y resolución de efectos de cartas (*propia, target, global, maestra*).  
@@ -98,7 +97,7 @@ El sistema está dirigido a **jugadores casuales**, sin requerimientos técnicos
 
 ### 2.5 Suposiciones y dependencias  
 - Todos los jugadores comparten el mismo dispositivo.  
-- Los efectos de cartas y la generación procedural están predefinidos.
+- Los efectos de cartas y la generación aleatoria están predefinidos.
 
 ---
 
@@ -123,8 +122,8 @@ El sistema está dirigido a **jugadores casuales**, sin requerimientos técnicos
 | ID | Requisito Funcional | Descripción |
 |----|----------------------|--------------|
 | **RF-01** | Configuración de jugadores | Permitir entre 2 y 8 jugadores con nombres únicos. |
-| **RF-02** | Configuración de dado | Seleccionar número de caras entre 3 y 30. |
-| **RF-03** | Generación de mapa | Crear mapa procedural con distribución aleatoria de casillas. |
+| **RF-02** | Configuración de dado | Seleccionar número de caras entre 3 y 20. |
+| **RF-03** | Generación de mapa | Crear mapa con tamaño variable segun las caras del dado con distribución aleatoria de casillas. |
 | **RF-04** | Orden de turnos | Determinar automáticamente el orden de los jugadores. |
 | **RF-05** | Movimiento | Lanzar el dado y mover la ficha según el resultado. |
 | **RF-06** | Detección de casilla | Determinar el tipo de casilla y activar carta si aplica. |
