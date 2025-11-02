@@ -1,4 +1,4 @@
-#Especificación de Requisitos de Software (ERS)  
+# Especificación de Requisitos de Software (ERS)
 **Proyecto:** EBOGE  
 **Basado en:** IEEE Std 830-1998  
 
