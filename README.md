@@ -21,9 +21,8 @@ Los jugadores avanzan lanzando un dado configurable (de 3 a 30 caras) y, dependi
 ## 🚀 Cómo Ejecutar el Proyecto
 
 
-### Opción 1: Ejecutar el .jar (Recomendado)
+### Ejecutar el .jar 
 
-Si creaste un archivo `.jar` ejecutable:
 
 1.  Descarga el archivo `EBOGE.jar` de la sección de "Releases" de este repositorio.
     
@@ -37,36 +36,7 @@ Si creaste un archivo `.jar` ejecutable:
     ```
     
 
-### Opción 2: Compilar desde el código fuente
 
-1.  **Clona el repositorio:**
-    
-    ```
-    git clone [https://github.com/tu-usuario/tu-proyecto-eboge.git](https://github.com/tu-usuario/tu-proyecto-eboge.git)
-    
-    ```
-    
-2.  **Entra al directorio:**
-    
-    ```
-    cd tu-proyecto-eboge
-    
-    ```
-    
-3.  **Compila el código:** (Ajusta esto si usas una carpeta `src`)
-    
-    ```
-    javac *.java
-    
-    ```
-    
-4.  **Ejecuta el juego:** (Reemplaza `Main` con el nombre de tu clase principal)
-    
-    ```
-    java Main
-    
-    ```
-    
 
 ## 👥 Autores (Equipo 7)
 
