@@ -7,7 +7,7 @@
 ## 1. Introducción
 
 ### 1.1 Propósito  
-El presente documento tiene como finalidad establecer de forma estructurada, verificable y trazable los **requisitos funcionales y no funcionales** del sistema **EBOGE**, un juego de mesa digital desarrollado en **Java**.  
+El presente documento tiene como finalidad establecer de forma estructurada, verificable y trazable los **requisitos funcionales** del sistema **EBOGE**, un juego de mesa digital desarrollado en **Java**.  
 Este documento servirá como **base contractual y técnica** para el diseño, desarrollo, pruebas y mantenimiento del sistema, de acuerdo con las recomendaciones del estándar **IEEE Std 830-1998**.
 
 ---
@@ -15,7 +15,7 @@ Este documento servirá como **base contractual y técnica** para el diseño, de
 ### 1.2 Alcance del sistema  
 **EBOGE** es un juego de mesa digital multijugador local en el que los participantes compiten por alcanzar la meta antes que sus oponentes.  
 Los jugadores lanza un **dado configurable (de 3 a 20 caras)** para avanzar por el tablero. 
-El tablero tiene un tamaño definido segun el numero de caras del dado y las casillas se general de forma aleatoria, permitiendo variaciones dinámicas en cada partida.   
+El tablero tiene un tamaño definido según el numero de caras del dado y las casillas se general de forma aleatoria, permitiendo variaciones dinámicas en cada partida.   
 Según el tipo de casilla en que caiga, el sistema activa una carta de uno de los **cuatro mazos** disponibles:  
 - **Propia**  
 - **Target**  
@@ -123,7 +123,7 @@ El sistema está dirigido a **jugadores casuales**, sin requerimientos técnicos
 |----|----------------------|--------------|
 | **RF-01** | Configuración de jugadores | Permitir entre 2 y 8 jugadores con nombres únicos. |
 | **RF-02** | Configuración de dado | Seleccionar número de caras entre 3 y 20. |
-| **RF-03** | Generación de mapa | Crear mapa con tamaño variable segun las caras del dado con distribución aleatoria de casillas. |
+| **RF-03** | Generación de mapa | Crear mapa con tamaño variable según las caras del dado con distribución aleatoria de casillas. |
 | **RF-04** | Orden de turnos | Determinar automáticamente el orden de los jugadores. |
 | **RF-05** | Movimiento | Lanzar el dado y mover la ficha según el resultado. |
 | **RF-06** | Detección de casilla | Determinar el tipo de casilla y activar carta si aplica. |
