@@ -53,9 +53,9 @@ Los jugadores avanzan lanzando un dado configurable (de 3 a 30 caras) y, dependi
 
 | Nombre | Rol | Fotografia |
 |--------|-----|------------|
-| [Giuseph Alexis Chan Torres](https://github.com/CarlosRomero123)| N/A | <img src="Assets/Giuseph_Chan.jpg" width="150" height="250"/> |
-| [Aldrin Enique Novelo Góngora](https://github.com/Aldrin1710)| N/A | <img src="/Assets/AldrinNovelo.jpg" width="150" height="250"/>|
-| [Carlos Emmanuel Romerto Poot](https://github.com/CarlosRomero123)| N/A |<img src="/Assets/CharlyImg.jpg" width="150" height="250"/>|
-| [Erick Ricardo Vega Nolasco](https://pages.github.com/)| N/A |  <img src="/Assets/Erick2.jpg" width="150" height="250"/>|
+| [Giuseph Alexis Chan Torres](https://github.com/CarlosRomero123)| N/A | <img src="Assets/Fotos/GiusephChan.jpg" width="150" height="250"/> |
+| [Aldrin Enique Novelo Góngora](https://github.com/Aldrin1710)| N/A | <img src="/Assets/Fotos/AldrinNovelo.jpg" width="150" height="250"/>|
+| [Carlos Emmanuel Romerto Poot](https://github.com/CarlosRomero123)| N/A |<img src="/Assets/Fotos/CharlyRomero.jpg" width="150" height="250"/>|
+| [Erick Ricardo Vega Nolasco](https://pages.github.com/)| N/A |  <img src="/Assets/Fotos/ErickVega.jpg" width="150" height="250"/>|
     
     
