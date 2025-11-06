@@ -14,8 +14,8 @@ Este documento servirá como **base contractual y técnica** para el diseño, de
 
 ### 1.2 Alcance del sistema  
 **EBOGE** es un juego de mesa digital multijugador local en el que los participantes compiten por alcanzar la meta antes que sus oponentes.  
-Los jugadores lanza un **dado configurable (de 3 a 20 caras)** para avanzar por el tablero. 
-El tablero tiene un tamaño definido según el numero de caras del dado y las casillas se general de forma aleatoria, permitiendo variaciones dinámicas en cada partida.   
+Los jugadores lanza un **dado configurable (de 3 a 15 caras)** para avanzar por el tablero. 
+El tablero tiene un tamaño definido segun el numero de caras del dado y las casillas se general de forma aleatoria, permitiendo variaciones dinámicas en cada partida.   
 Según el tipo de casilla en que caiga, el sistema activa una carta de uno de los **cuatro mazos** disponibles:  
 - **Propia**  
 - **Target**  
@@ -38,7 +38,7 @@ Según el tipo de casilla en que caiga, el sistema activa una carta de uno de lo
 | **Mapa procedural** | Tablero generado mediante algoritmo pseudoaleatorio con distribución variable de casillas. |
 | **Estado de inmovilización** | Condición temporal que impide mover por *n* turnos. |
 | **Turno** | Ciclo de juego: lanzamiento de dado → movimiento → resolución de efectos. |
-| **Dado N** | Dado configurable de *N* caras (3 ≤ N ≤ 30). |
+| **Dado N** | Dado configurable de *N* caras (3 ≤ N ≤ 15). |
 
 
 ---
@@ -48,23 +48,21 @@ Según el tipo de casilla en que caiga, el sistema activa una carta de uno de lo
 
 ---
 
-### 1.5 Visión general del documento  
+### 1.5 Visión general del documento  (Resumen)
 El documento se estructura en cuatro secciones principales:
 
 1. Introducción y definiciones.  
 2. Descripción general del sistema.  
-3. Requisitos funcionales.  
+3. Requisitos funcionales y no funcionales.  
 ---
 
 ## 2. Descripción general
 
 ### 2.1 Perspectiva del producto  
-EBOGE es un **software de escritorio autónomo**, ejecutable en una sola máquina.  
-No depende de red ni servidores externos.  
-Su núcleo se basa en:  
-- Un **motor de turnos**,  
-- Un **sistema de generacion aleatorio de casillas**,  
-- Un **sistema modular de cartas**.
+EBOGE es un **software de escritorio autónomo** , clasificado como una aplicación independiente. No depende de red, servidores externos ni de otros sistemas de software. Es el producto principal sin otros productos relacionados.Su núcleo se basa en: 
+- Un motor de turnos
+- un sistema de generación aleatoria de casillas 
+- y un sistema modular de cartas.
 
 ---
 
@@ -80,7 +78,12 @@ Su núcleo se basa en:
 ---
 
 ### 2.3 Características de los usuarios  
-El sistema está dirigido a **jugadores casuales**, sin requerimientos técnicos previos.
+|Características  |Detalles|
+|------|--------------|
+|Rol  | Jugador (con rol activo en turno) y Observador (en turnos ajenos) |
+|Conocimiento técnico  | Jugador casual. No se requiere conocimiento técnico.| 
+|Experiencia de juego  | Familiarizado con los juegos de mesa tradicionales  |
+
 
 ---
 
@@ -98,26 +101,14 @@ El sistema está dirigido a **jugadores casuales**, sin requerimientos técnicos
 ### 2.5 Suposiciones y dependencias  
 - Todos los jugadores comparten el mismo dispositivo.  
 - Los efectos de cartas y la generación aleatoria están predefinidos.
+- Se asume que el sistema se ejecutará en una máquina de escritorio con mínimo 4 GB de RAM y una resolución de pantalla de al menos 1280x720 píxeles.
 
 ---
 
-### 2.6 Requisitos futuros  
-- Integración con red local o juego en línea.
-
----
 
 ## 3. Requisitos específicos
 
-### 3.1 Interfaces externas  
-**Interfaz de usuario (IU):**
-- Visualización gráfica del tablero.  
-- Panel de estado (turno actual, dado, cartas, estados de restricción).  
-- Panel de control.  
-- Registro de eventos.
-
----
-
-### 3.2 Requisitos funcionales  
+### 3.1 Requisitos funcionales  
 
 | ID | Requisito Funcional | Descripción |
 |----|----------------------|--------------|
@@ -136,3 +127,55 @@ El sistema está dirigido a **jugadores casuales**, sin requerimientos técnicos
 | **RF-13** | Condición de victoria | Declarar ganador al llegar o sobrepasar la casilla meta. |
 | **RF-14** | Casilla de restricción | Aplicar inmovilización por *n* turnos (1 ≤ n ≤ 3). |
 | **RF-15** | Casilla normal | No aplicar efecto adicional ni activar carta alguna. |
+
+### 3.2. Requisitos de Rendimiento 
+| ID | Requisito no Funcional | Descripción |
+|----|----------------------|--------------|
+| **RNF-01** | Tiempo de Respuesta de Turno | Tiempo máximo de procesamiento de 1 minuto para un ciclo completo (lanzamiento, movimiento de casillas, resolución de carta)|
+| **RNF-02** | Tiempo máximo de creación del mapa | Tiempo máximo de 3 minutos para crear un mapa completamente nuevo.|
+
+### 3.3 Restricciones de Diseño
+| ID | Requisito de diseño | Descripción |
+|----|----------------------|--------------|
+| **RD-01** | Lenguaje y entorno | El desarrollo del código del backend y lógica de negocio debe ser exclusivamente (o en su gran mayoría) de Java 21 o versiones posteriores. |
+| **RD-02** | Framework de la Interfaz Gráfica | La Interfaz del Usuario (IU) debe implementarse usando JavaFX. |
+| **RD-03** | Arquitectura | El diseño de software de la aplicación seguirá un patron arquitectónico MVC para la separación de la lógica de negocio con la interfaz de usuario. |
+| **RD-04** | Estándares de Codificación | El proceso de la construcción de software seguirá los estandáres de Java y posibles adaptaciones de este para asegurar la consistencia y mantenibilidad del código. |
+
+### 3.4 Requisitos no funcionales 
+
+### 3.4.1 Fiabilidad
+|ID | Requisito no funcional | Descripción |
+|----|----------------------|--------------|
+| **RNF-01** | Aleatoriedad | La generación de resultados del dado y distribución de las casillas deben ser impredecibles por el usuario |
+
+### 3.4.2 Usabilidad 
+|ID | Requisito no funcional | Descripción |
+|----|----------------------|--------------|
+| **RNF-02** | Facilidad de inicio de la partida | El número máximo de acciones requeridas para comenzar la partida al iniciar la aplicación deberá ser de menor que 5 clics |
+| **RNF-03** | Claridad de Estado | Los estados activos de los jugadores (ej. inmovilizado) deben ser visualmente obvios.|
+
+### 3.4.3 Seguridad
+|ID | Requisito no funcional | Descripción |
+|----|----------------------|--------------|
+| **RNF-04** | Manejo de errores | La aplicación debe gestionar errores de forma controlada mostrando un mensaje de error al usuario con la causa del error.|
+
+### 3.4.4 Mantenibilidad
+|ID | Requisito no funcional | Descripción |
+|----|----------------------|--------------|
+|**RNF-05** | Cobertura de Pruebas | El código principal (motor de turnos, lógica de cartas y generación de mapa) debe tener una cobertura de pruebas unitarias mínima del 80%.|
+|**RNF-06** | Estructura modular | La lógica de los efectos de las cartas y la generación de casillas debe ser completamente modular, permitiendo la adición/modificación de nuevos efectos sin alterar el código del motor de turnos (alta cohesión, bajo acoplamiento).|
+|**RNF-07** | Documentación de clases | Todas las clases y métodos públicos deben incluir comentarios Javadoc que describan su propósito, parámetros de entrada y valores de retorno.|
+|**RNF-08** | Estándares de codificación | Todo el código desarrollado debe adherirse a un estándar de codificación Java y posibles adaptaciones de este para garantizar la uniformidad.|
+|**RNF-09** | Abstracción de la UI | El diseño de la interfaz de usuario (IU) debe estar separado de la lógica de negocio (MVC) para permitir modificar la apariencia sin afectar el comportamiento del juego.|
+|**RNF-10** | Control de Versiones | Todos los artefactos del código fuente deben ser gestionados mediante el sistema de control de versiones Git, utilizando un flujo de trabajo definido (Plan de Trabajo). |
+
+
+
+
+
+
+
+
+
+
