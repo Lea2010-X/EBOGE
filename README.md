@@ -1,4 +1,4 @@
-# EBOGE (Juego de Mesa Digital)
+# EBOGE (Juego de Mesa)
 
 <!-- **DESCRIPCIÓN:** Resumen tomado del documento ERS (alcance 1.2). -->
 
@@ -8,6 +8,17 @@ Los jugadores avanzan lanzando un dado configurable (de 3 a 30 caras) y, dependi
 
 
 <p align="center"> <img src="https://www.google.com/search?q=https://placehold.co/700x350/333/FFF%3Ftext%3DScreenshot%2Bdel%2Bjuego%2BEBOGE" alt="Screenshot del Proyecto EBOGE"> </p>
+
+
+##  :computer: Entregas del proyecto
+
+- :one: [Primera Entrega](https://github.com/Aldrin1710/Desarrollo-de-Paginas-Web-2025-/blob/main/Entregas/Primera%20Entrega)
+
+- :arrow_double_down: [Entrega final](https://github.com/Aldrin1710/Desarrollo-de-Paginas-Web-2025-/blob/main/Entregas/Entrega%20Final)
+
+## 📔 Documentación
+
+-   [Documentación del Proyecto](https://github.com/CarlosRomero123/EBOGE/tree/main/Documentaci%C3%B3n)
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -40,12 +51,11 @@ Los jugadores avanzan lanzando un dado configurable (de 3 a 30 caras) y, dependi
 
 ## 👥 Autores (Equipo 7)
 
--   **Chan Torres Giuseph Alexis** - [@usuario-github1](https://www.google.com/search?q=https://github.com/usuario-github1 "null")
-    
--   **Novelo Góngora Aldrin Enrique** - [@usuario-github2](https://www.google.com/search?q=https://github.com/usuario-github2 "null")
-    
--   **Romero Poot Carlos Emmanuel** - [@usuario-github3](https://www.google.com/search?q=https://github.com/usuario-github3 "null")
-    
--   **Vega Nolasco Erick Ricardo** - [@usuario-github4](https://www.google.com/search?q=https://github.com/usuario-github4 "null")
+| Nombre | Rol | Fotografia |
+|--------|-----|------------|
+| [Giuseph Alexis Chan Torres](https://github.com/CarlosRomero123)| N/A | <img src="Assets/Fotos/GiusephChan.jpg" width="150" height="250"/> |
+| [Aldrin Enique Novelo Góngora](https://github.com/Aldrin1710)| N/A | <img src="/Assets/Fotos/AldrinNovelo.jpg" width="150" height="250"/>|
+| [Carlos Emmanuel Romerto Poot](https://github.com/CarlosRomero123)| N/A |<img src="/Assets/Fotos/CharlyRomero.jpg" width="150" height="250"/>|
+| [Erick Ricardo Vega Nolasco](https://pages.github.com/)| N/A |  <img src="/Assets/Fotos/ErickVega.jpg" width="150" height="250"/>|
     
     
