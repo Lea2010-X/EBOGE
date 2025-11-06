@@ -131,8 +131,8 @@ EBOGE es un **software de escritorio autónomo** , clasificado como una aplicaci
 ### 3.2. Requisitos de Rendimiento 
 | ID | Requisito no Funcional | Descripción |
 |----|----------------------|--------------|
-| **RNF-01** | Tiempo de Respuesta de Turno | Tiempo máximo de procesamiento de 500 ms para un ciclo completo (lanzamiento, movimiento de casillas, resolución de carta)|
-| **RNF-02** | Tiempo máximo de creación del mapa | Tiempo máximo de 200 ms para crear un mapa completamente nuevo.|
+| **RNF-01** | Tiempo de Respuesta de Turno | Tiempo máximo de procesamiento de 1 minuto para un ciclo completo (lanzamiento, movimiento de casillas, resolución de carta)|
+| **RNF-02** | Tiempo máximo de creación del mapa | Tiempo máximo de 3 minutos para crear un mapa completamente nuevo.|
 
 ### 3.3 Restricciones de Diseño
 | ID | Requisito de diseño | Descripción |
