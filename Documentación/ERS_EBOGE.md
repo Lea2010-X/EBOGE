@@ -14,7 +14,7 @@ Este documento servirá como **base contractual y técnica** para el diseño, de
 
 ### 1.2 Alcance del sistema  
 **EBOGE** es un juego de mesa digital multijugador local en el que los participantes compiten por alcanzar la meta antes que sus oponentes.  
-Los jugadores lanza un **dado configurable (de 3 a 15 caras)** para avanzar por el tablero. 
+Los jugadores lanza un **dado configurable (de 3 a 20 caras)** para avanzar por el tablero. 
 El tablero tiene un tamaño definido segun el numero de caras del dado y las casillas se general de forma aleatoria, permitiendo variaciones dinámicas en cada partida.   
 Según el tipo de casilla en que caiga, el sistema activa una carta de uno de los **cuatro mazos** disponibles:  
 - **Propia**  
@@ -38,7 +38,7 @@ Según el tipo de casilla en que caiga, el sistema activa una carta de uno de lo
 | **Mapa procedural** | Tablero generado mediante algoritmo pseudoaleatorio con distribución variable de casillas. |
 | **Estado de inmovilización** | Condición temporal que impide mover por *n* turnos. |
 | **Turno** | Ciclo de juego: lanzamiento de dado → movimiento → resolución de efectos. |
-| **Dado N** | Dado configurable de *N* caras (3 ≤ N ≤ 15). |
+| **Dado N** | Dado configurable de *N* caras (3 ≤ N ≤ 20). |
 
 
 ---
