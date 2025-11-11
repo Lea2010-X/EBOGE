@@ -4,7 +4,7 @@
 
 EBOGE es un juego de mesa multijugador local desarrollado en Java. Los participantes (de 2 a 8) compiten por alcanzar la meta en un tablero generado de forma procedural.
 
-Los jugadores avanzan lanzando un dado configurable (de 3 a 30 caras) y, dependiendo de la casilla, activan cartas de cuatro mazos diferentes: **Propia**, **Target**, **Global** y **Maestra**.
+Los jugadores avanzan lanzando un dado configurable (de 3 a 20 caras) y, dependiendo de la casilla, activan cartas de cuatro mazos diferentes: **Propia**, **Target**, **Global** y **Maestra**.
 
 
 <p align="center"> <img src="https://www.google.com/search?q=https://placehold.co/700x350/333/FFF%3Ftext%3DScreenshot%2Bdel%2Bjuego%2BEBOGE" alt="Screenshot del Proyecto EBOGE"> </p>

@@ -90,7 +90,7 @@ Las constantes son variables cuyo valor no cambia.
 - public static final int MIN\_JUGADORES = 2;       // RF-01
 - public static final int MAX\_JUGADORES = 8;       // RF-01
 - public static final int MIN\_CARAS\_DADO = 3;    // RF-02
-- public static final int MAX\_CARAS\_DADO = 30;   // RF-02
+- public static final int MAX\_CARAS\_DADO = 20;   // RF-02
 - public static final int MAX\_TURNOS\_RESTRICCION = 3; // RF-14
 - **Incorrecto:** static final int minJugadores = 2; (camelCase), final int MaxJugadores = 8; (PascalCase y no estática).
 ## **3. Formato de Código (Code Formatting)**
