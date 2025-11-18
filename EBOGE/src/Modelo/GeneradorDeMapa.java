@@ -68,6 +68,7 @@ public class GeneradorDeMapa {
 		int indiceActual = 0;
 		int totalCasillas = cantidadFilas * cantidadColumnas;
 
+		
 		while (limiteSuperior <= limiteInferior && limiteIzquierdo <= limiteDerecho && indiceActual < totalCasillas) {
 
 			// Bajar por columna izquierda
@@ -126,9 +127,9 @@ public class GeneradorDeMapa {
 					int indiceCasilla = indicesCasillas[fila][columna];
 					TipoCasilla tipo = tiposDeCasilla[fila][columna];
 
-					char simboloTipo = tipo.getSimbolo();
+					char simboloTipo = tipo.getLetra();
 
-					linea.append("[").append(indiceCasilla).append(",").append(simboloTipo).append(",()]");
+					linea.append("[").append(indiceCasilla).append(",").append(simboloTipo).append("]");
 				}
 
 				escritor.write(linea.toString());
@@ -141,3 +142,4 @@ public class GeneradorDeMapa {
 	}
 
 }
+

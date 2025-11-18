@@ -3,7 +3,8 @@ package Modelo;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
+import java.io.IOException;
+
 
 public class Mapa {
 
@@ -16,6 +17,8 @@ public class Mapa {
 	private TipoCasilla[] tiposPorCasilla;
 	private String rutaMapa;
 
+
+	//Constructor
 	public Mapa(int anchoMapa, int largoMapa, int anchoCasilla, int largoCasilla, String rutaMapa) {
 		this.anchoMapa = anchoMapa;
 		this.largoMapa = largoMapa;
@@ -29,92 +32,9 @@ public class Mapa {
 		cargarMapa();
 	}
 
-	//Faltan metodos que utilizan jugador
 
-	public TipoCasilla identificarTipoDeCasilla(int numCasilla) {
-		if (numCasilla < 0 || numCasilla >= tiposPorCasilla.length) {
-			return null;
-		}
-		return tiposPorCasilla[numCasilla];
-	}
-	
-	public void eliminarTxt() {
-		try {
-			File archivo = new File(rutaMapa);
-			if (archivo.exists()) {
-				archivo.delete();
-			}
-		} catch (Exception e) {
-			System.err.println("Error al eliminar el archivo del mapa.");
-		}
-	}
-
-	private void cargarMapa() {
-		try (BufferedReader lector = new BufferedReader(new FileReader(rutaMapa))) {
-
-			String linea;
-
-			while ((linea = lector.readLine()) != null) {
-
-				int pos = 0;
-
-				while (true) {
-
-					int inicio = linea.indexOf('[', pos);
-					if (inicio == -1)
-						break;
-
-					int fin = linea.indexOf(']', inicio);
-					if (fin == -1)
-						break;
-
-					String contenido = linea.substring(inicio + 1, fin);
-					String[] partes = contenido.split(",");
-
-					if (partes.length >= 2) {
-						int numCasilla = Integer.parseInt(partes[0].trim());
-						char simbolo = partes[1].trim().charAt(0);
-
-						TipoCasilla tipo = convertirLetraATipo(simbolo);
-
-						if (numCasilla >= 0 && numCasilla < tiposPorCasilla.length) {
-							tiposPorCasilla[numCasilla] = tipo;
-						}
-					}
-
-					pos = fin + 1;
-				}
-			}
-
-		} catch (Exception e) {
-			System.err.println("Error al cargar el mapa desde el archivo: " + rutaMapa);
-		}
-	}
-
-	private TipoCasilla convertirLetraATipo(char letra) {
-		for (TipoCasilla tipo : TipoCasilla.values()) {
-			if (tipo.getSimbolo() == letra) {
-				return tipo;
-			}
-		}
-		return null;
-	}
-
-	public void imprimirMapaEnConsola() {
-		System.out.println("=== Contenido del mapa ===");
-
-		for (int i = 0; i < tiposPorCasilla.length; i++) {
-			TipoCasilla tipo = tiposPorCasilla[i];
-
-			if (tipo == null) {
-				System.out.println("Casilla " + i + ": (sin tipo)");
-			} else {
-				System.out.println("Casilla " + i + ": " + tipo.name());
-			}
-		}
-	}
-	
-	public int geTotalCasillas() {
+	//Getters
+	public int getTotalCasillas() {
 		return tiposPorCasilla.length;
 	}
 
@@ -136,5 +56,98 @@ public class Mapa {
 
 	public String getRutaMapa() {
 		return rutaMapa;
+	}
+
+
+	//Métodos Públicos 
+	
+	public TipoCasilla identificarTipoDeCasilla(int numeroCasilla) {
+		if (numeroCasilla < 0 || numeroCasilla >= tiposPorCasilla.length) {
+			return null;
+		}
+		return tiposPorCasilla[numeroCasilla];
+	}
+
+	public void eliminarTxt() {
+		try {
+
+			File archivo = new File(rutaMapa); 
+			if (archivo.exists()) {
+				archivo.delete();
+			}
+		} catch (Exception excepcion) {
+			System.err.println("Error al eliminar el archivo del mapa.");
+		}
+	}
+
+	public void imprimirMapaEnConsola() {
+		System.out.println("=== Contenido del mapa ===");
+
+		for (int indice = 0; indice < tiposPorCasilla.length; indice++) {
+			TipoCasilla tipo = tiposPorCasilla[indice];
+
+			if (tipo == null) {
+				System.out.println("Casilla " + indice + ": (sin tipo)");
+			} else {
+				System.out.println("Casilla " + indice + ": " + tipo.name());
+			}
+		}
+	}
+
+
+
+	//Métodos privados
+	private void cargarMapa() {
+		
+		try (BufferedReader lector = new BufferedReader(new FileReader(rutaMapa))) {
+
+			String lineaActual;
+
+			while ((lineaActual = lector.readLine()) != null) {
+
+				int posicionBusqueda = 0;
+
+				while (true) {
+					int inicioCasilla = lineaActual.indexOf('[', posicionBusqueda);
+					if (inicioCasilla == -1) {
+						break;
+					}
+
+					int finCasilla = lineaActual.indexOf(']', inicioCasilla);
+					if (finCasilla == -1) {
+						break;
+					}
+
+					String contenidoCasilla = lineaActual.substring(inicioCasilla + 1, finCasilla);
+					String[] partesCasilla = contenidoCasilla.split(",");
+
+					if (partesCasilla.length >= 2) {
+						int numeroCasilla = Integer.parseInt(partesCasilla[0].trim());
+						char letraTipo = partesCasilla[1].trim().charAt(0);
+
+						TipoCasilla tipo = convertirLetraATipo(letraTipo);
+
+						if (numeroCasilla >= 0 && numeroCasilla < tiposPorCasilla.length) {
+							tiposPorCasilla[numeroCasilla] = tipo;
+						}
+					}
+
+					posicionBusqueda = finCasilla + 1;
+				}
+			}
+
+		} catch (IOException excepcion) {
+			System.err.println("Error al cargar el mapa desde el archivo: " + rutaMapa);
+		}
+	}
+
+
+	private TipoCasilla convertirLetraATipo(char letraCasilla) {
+		for (TipoCasilla tipo : TipoCasilla.values()) {
+			if (tipo.getLetra() == letraCasilla) {
+				return tipo;
+			}
+		}
+		return null;
 	}
 }

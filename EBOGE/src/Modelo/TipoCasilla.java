@@ -25,7 +25,7 @@ public enum TipoCasilla {
 		this.probabilidad = probabilidad;
 	}
 
-	public char getSimbolo() {
+	public char getLetra() {
 		return letra;
 	}
 
@@ -56,3 +56,4 @@ public enum TipoCasilla {
 		return NORMAL;
 	}
 }
+
