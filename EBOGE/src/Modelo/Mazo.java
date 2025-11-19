@@ -88,4 +88,8 @@ public class Mazo {
 
         return this.pila.poll(); 
     }
+    
+    public int getCantidadCartas() {
+        return this.pila.size();
+    }
 }
