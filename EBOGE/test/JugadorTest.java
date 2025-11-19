@@ -9,10 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-/**
- * Pruebas unitarias para la clase Jugador
- * Se enfoca en la interacción del jugador con sus estados y efectos (estrategias).
- */
+
 
 @DisplayName("Pruebas de la Clase Jugador")
 class JugadorTest {
@@ -25,7 +22,7 @@ class JugadorTest {
         jugador = new Jugador("Carlos", ColorJugador.ROJO);
     }
 
-    // Pruebas agrupadas para el constructor y el estado inicial
+    
     @Nested
     @DisplayName("Constructor y Estado Inicial")
     class ConstructorYEstadoInicial {
@@ -70,7 +67,7 @@ class JugadorTest {
         }
     }
 
-    // Pruebas agrupadas para el Patrón Strategy (Efectos)
+    
     @Nested
     @DisplayName("Patrón Strategy (Gestión de Efectos)")
     class GestionDeEfectos {
@@ -127,13 +124,13 @@ class JugadorTest {
         @DisplayName("removerEfecto no debe cambiar estado si hay otro Stun")
         void testRemoverEfectoConStunDuplicado() {
             // Arrange
-            EfectoJugador stunA = new EfectoStun(1); // 1 turno
-            EfectoJugador stunB = new EfectoStun(2); // 2 turnos
+            EfectoJugador stunA = new EfectoStun(1); 
+            EfectoJugador stunB = new EfectoStun(2); 
             jugador.aplicarEfecto(stunA);
-            jugador.aplicarEfecto(stunB); // Ahora hay 2 stuns
+            jugador.aplicarEfecto(stunB); 
 
             // Act
-            jugador.actualizarEfectos(); // Pasa 1 turno, stunA expira y se remueve
+            jugador.actualizarEfectos(); 
 
             // Assert
             assertEquals(EstadoJugador.INMOVILIZADO, jugador.getEstado(), "El estado NO debe cambiar a NORMAL, porque stunB sigue activo");
@@ -142,7 +139,7 @@ class JugadorTest {
         }
     }
 
-    // Pruebas agrupadas para la lógica del Dado
+    
     @Nested
     @DisplayName("Lógica de Lanzar Dado")
     class LanzarDado {
@@ -173,7 +170,7 @@ class JugadorTest {
         @DisplayName("lanzarDado debe duplicar el resultado si hay un Buff")
         void testLanzarDadoConBuff() {
             // Arrange
-            // Creamos un Buff simple solo para esta prueba
+            
             EfectoJugador buffMovimientoDoble = new EfectoJugador() {
                 public void aplicarEfectoInicial(Jugador j) {}
                 public void actualizarEfectoPorTurno(Jugador j) {}
@@ -183,11 +180,11 @@ class JugadorTest {
             };
             jugador.aplicarEfecto(buffMovimientoDoble);
 
-            // Creamos un "Dado Falso" (Stub) para controlar el resultado
+            
             Dado dadoFalso = new Dado(6) {
                 @Override
                 public int lanzar() {
-                    return 4; // Siempre saca 4
+                    return 4; 
                 }
             };
 
@@ -199,7 +196,7 @@ class JugadorTest {
         }
     }
 
-    // Pruebas agrupadas para el contrato de equals y hashCode
+    
     @Nested
     @DisplayName("Contrato de Equals y HashCode")
     class EqualsYHashCode {

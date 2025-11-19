@@ -5,38 +5,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * (Patrones Strategy y State)
- *
- * Representa a un jugador.
- * -STATE: Mantiene una referencia a su estado actual (estado).
- * -STRATEGY: Mantiene una lista de EfectoJugador (estrategias)
- * y delega en ellas la ejecución de los efectos.
- */
+
 public class Jugador {
 
     private final String nombre;
     private final ColorJugador color;
     private int posicion;
 
-    /**
-     * (Patrón State) El estado actual del jugador.
-     */
+    
     private EstadoJugador estado;
 
-    /**
-     * (Patrón Strategy) La lista de "estrategias" de efectos activas.
-     */
+   
     private final List<EfectoJugador> efectosActivos;
 
-    // --- Constructor ---
-
-    /**
-     * Construye un nuevo jugador en su estado inicial.
-     *
-     * @param nombre El nombre del jugador (debe ser único).
-     * @param color El color de la ficha del jugador.
-     */
+    
     public Jugador(String nombre, ColorJugador color) {
         // Validación de "Guard Clause"
         if (nombre == null || nombre.trim().isEmpty()) {
@@ -50,28 +32,16 @@ public class Jugador {
         this.efectosActivos = new ArrayList<>();
     }
 
-    // --- Métodos de Lógica de Juego (Delegación) ---
-
-    /**
-     * Añade una nueva estrategia de efecto al jugador.
-     *
-     * @param efecto La estrategia concreta (ej. un EfectoStun).
-     */
+    
     public void aplicarEfecto(EfectoJugador efecto) {
         Objects.requireNonNull(efecto, "El efecto no puede ser nulo.");
         this.efectosActivos.add(efecto);
         
-        // Delega la aplicación inicial a la estrategia
+        
         efecto.aplicarEfectoInicial(this);
     }
 
-    /**
-     * Actualiza todos los efectos activos.
-     * Este método debe ser llamado al inicio del turno del jugador.
-     *
-     * Delega la lógica de actualización a cada estrategia
-     * y remueve las que han expirado.
-     */
+    
     
      public void actualizarEfectos() {
         
@@ -91,13 +61,7 @@ public class Jugador {
         }
     }
 
-    /**
-     * Simula el lanzamiento de un dado.
-     * El comportamiento puede variar según los efectos activos.
-     *
-     * @param dado El dado de la partida.
-     * @return El resultado del lanzamiento.
-     */
+    
     public int lanzarDado(Dado dado) {
         Objects.requireNonNull(dado, "El dado no puede ser nulo.");
         
@@ -109,36 +73,22 @@ public class Jugador {
         return tieneMovimientoDoble ? (resultadoBase * 2) : resultadoBase;
     }
 
-    // --- Getters y Setters (Manejo de Estado) ---
-
-    /**
-     * (Patrón State) Obtiene el estado actual.
-     *
-     * @return El EstadoJugador (NORMAL, INMOVILIZADO).
-     */
+   
     public EstadoJugador getEstado() {
         return estado;
     }
 
-    /**
-     * (Patrón State) Permite a los efectos (Estrategias) cambiar el estado.
-     *
-     * @param estado El nuevo estado del jugador.
-     */
+    
     void setEstado(EstadoJugador estado) {
         this.estado = estado;
     }
 
-    /**
-     * (Patrón State) Método de conveniencia para consultar el estado.
-     *
-     * @return true si el estado es INMOVILIZADO.
-     */
+    
     public boolean estaInmovilizado() {
         return this.estado == EstadoJugador.INMOVILIZADO;
     }
     
-    // --- Getters estándar ---
+    
 
     public String getNombre() {
         return nombre;
@@ -156,16 +106,12 @@ public class Jugador {
         this.posicion = posicion;
     }
 
-    /**
-     * Devuelve una lista (solo lectura) de los efectos activos.
-     *
-     * @return Una nueva lista con los efectos actuales.
-     */
+    
     public List<EfectoJugador> getEfectosActivos() {
         return new ArrayList<>(this.efectosActivos);
     }
 
-    // --- Métodos Estándar de Java ---
+    
     
     @Override
     public boolean equals(Object obj) {
