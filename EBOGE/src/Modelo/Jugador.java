@@ -20,7 +20,6 @@ public class Jugador {
     private int posicion;
     private int ultimoMovimiento; 
     private boolean requiereActivacion;
-
     /**
      * (Patrón State) El estado actual del jugador.
      */
@@ -44,14 +43,13 @@ public class Jugador {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del jugador no puede ser nulo o vacío.");
         }
-        
+        this.requiereActivacion = false;
         this.nombre = nombre.trim();
         this.color = Objects.requireNonNull(color, "El color no puede ser nulo.");
         this.posicion = 0;
         this.estado = EstadoJugador.NORMAL; 
         this.efectosActivos = new ArrayList<>();
         this.ultimoMovimiento = 0;
-        this.requiereActivacion = false;
     }
 
     // --- Métodos de Lógica de Juego (Delegación) ---
@@ -95,40 +93,31 @@ public class Jugador {
         }
     }
 
-     /**
-      * Mueve al jugador hacia adelante y registra el movimiento.
-      * El MotorDeTurnos debe usar esto.
-      * * @param cantidad La cantidad de casillas a avanzar (resultado del dado).
-      * @param totalCasillas El total de casillas en el mapa (para no pasarse).
-      */
-     public void avanzar(int cantidad, int totalCasillas) {
-         this.ultimoMovimiento = cantidad; // ¡Guardamos el movimiento!
-         
-         int nuevaPosicion = this.posicion + cantidad;
-         
-         // Lógica para no pasarse de la meta (asumiendo que la meta es la última casilla)
-         if (nuevaPosicion >= totalCasillas) {
-             this.posicion = totalCasillas - 1; 
-         } else {
-             this.posicion = nuevaPosicion;
-         }
-         this.requiereActivacion = true; 
-     }
+    public void avanzar(int cantidad, int totalCasillas) {
+        this.ultimoMovimiento = cantidad; // <-- 3. GUARDAR MOVIMIENTO
+        int nuevaPosicion = this.posicion + cantidad;
+        
+        // Lógica para no pasarse de la meta (asumiendo que totalCasillas es el índice final)
+        if (nuevaPosicion >= totalCasillas) {
+            this.posicion = totalCasillas;
+        } else {
+            this.posicion = nuevaPosicion;
+        }
+        this.requiereActivacion = true; 
+    }
 
-     /**
-      * Mueve al jugador hacia atrás y registra el movimiento.
-      * Usado por cartas como Cronorruptura.
-      * * @param cantidad La cantidad de casillas a retroceder.
-      */
-     public void retroceder(int cantidad) {
-         this.ultimoMovimiento = -cantidad; // Guardamos el retroceso
-         this.posicion -= cantidad;
-         
-         if (this.posicion < 0) {
-             this.posicion = 0; // No ir a posiciones negativas
-         }
-     }
-     
+
+    /**
+     * Mueve al jugador hacia atrás.
+     */
+    public void retroceder(int cantidad) {
+        this.ultimoMovimiento = -cantidad; // <-- 3. GUARDAR MOVIMIENTO
+        this.posicion -= cantidad;
+        if (this.posicion < 0) {
+            this.posicion = 0; // No ir a posiciones negativas
+        }
+    }
+
 
     /**
      * Simula el lanzamiento de un dado.
@@ -198,7 +187,6 @@ public class Jugador {
     public void setPosicion(int posicion) {
         this.posicion = posicion;
     }
-    
     public boolean requiereActivacion() {
         return requiereActivacion;
     }
@@ -206,7 +194,6 @@ public class Jugador {
     public void setRequiereActivacion(boolean requiereActivacion) {
         this.requiereActivacion = requiereActivacion;
     }
-
    
 
     /**
@@ -218,7 +205,7 @@ public class Jugador {
         return new ArrayList<>(this.efectosActivos);
     }
 
-    
+    // --- Métodos Estándar de Java ---
     
     @Override
     public boolean equals(Object obj) {

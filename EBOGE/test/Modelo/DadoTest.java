@@ -10,10 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-/**
- * Pruebas unitarias para la clase Dado.
- * Verifica la validación del constructor (RF-02) y el rango de lanzamiento.
- */
+
 @DisplayName("Pruebas de la Clase Dado")
 class DadoTest {
 
@@ -58,12 +55,12 @@ class DadoTest {
         }
     }
 
-    // Usamos @RepeatedTest para simular múltiples lanzamientos
+    
     @RepeatedTest(100)
     @DisplayName("lanzar() debe devolver un valor siempre dentro del rango [1, Caras]")
     void testLanzarDentroDeRango() {
         // Arrange
-        Dado dado = new Dado(10); // Dado de 10 caras
+        Dado dado = new Dado(10); 
 
         // Act
         int resultado = dado.lanzar();

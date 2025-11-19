@@ -14,7 +14,7 @@ public class CartaSantuarioDelProtector extends Carta implements EfectoSinObjeti
         int posSiguiente = jugadorActivo.getPosicion() + 1;
         
         if (validarCasilla(posSiguiente, mapa)) {                    	    
-            mapa.cambiarTipoDeCasilla(posSiguiente, TipoCasilla.PROPIA);
+            mapa.modificarTipoDeCasilla(posSiguiente, TipoCasilla.PROPIA);
             
         } else {
             System.out.println("La carta falla... la casilla siguiente no es válida o ya es propia.");

@@ -1,21 +1,15 @@
 package Modelo;
+<<<<<<< HEAD
+=======
 
-/**
- * (Patrón State)
- * Representa los estados discretos en los que puede estar un Jugador.
- * El comportamiento del jugador puede depender de este estado.
- *
- */
+>>>>>>> 047dcec6e5d36a161280f8dd98b378e3f8089b6b
+
 public enum EstadoJugador {
-    /**
-     * El jugador puede moverse y actuar normalmente.
-     */
+    
     NORMAL,
 
-    /**
-     * El jugador no puede moverse (está "stuneado").
-     */
+    
     INMOVILIZADO
     
-    // Futuros estados
+    
 }

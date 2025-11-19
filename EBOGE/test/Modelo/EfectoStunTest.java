@@ -9,14 +9,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-/**
- * Pruebas unitarias para la estrategia concreta EfectoStun.
- * Verifica la lógica interna de conteo de turnos y expiración.
- */
+
 @DisplayName("Pruebas de la Clase EfectoStun")
 class EfectoStunTest {
 
-    // Usamos un Jugador "Stub" solo como contexto para los métodos
+    
     private Jugador jugadorContexto;
     private EfectoStun efectoStun;
 
