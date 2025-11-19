@@ -1,6 +1,6 @@
 package Modelo;
 
-<<<<<<< HEAD
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,17 +11,17 @@ public class Mapa {
 
     private int anchoMapa;
     private int largoMapa;
-=======
+    
 public class Mapa {
 
     private int anchoMapa;   
     private int largoMapa;   
->>>>>>> 047dcec6e5d36a161280f8dd98b378e3f8089b6b
+
 
     private int anchoCasilla;
     private int largoCasilla;
 
-<<<<<<< HEAD
+
     private TipoCasilla[] tiposPorCasilla;
     private String rutaMapa;
 
@@ -200,7 +200,6 @@ public class Mapa {
 	    	return null;
     }
 }
-=======
     private Casilla[][] casillas;
 
     // Constructor
@@ -271,4 +270,3 @@ public class Mapa {
         return null;
     }
 }
->>>>>>> 047dcec6e5d36a161280f8dd98b378e3f8089b6b
