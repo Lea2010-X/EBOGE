@@ -20,7 +20,7 @@ public class Jugador {
 
     
     public Jugador(String nombre, ColorJugador color) {
-        // Validación de "Guard Clause"
+        
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del jugador no puede ser nulo o vacío.");
         }
@@ -118,7 +118,7 @@ public class Jugador {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Jugador jugador = (Jugador) obj;
-        // RF-01 implica que el nombre es la clave única
+        
         return nombre.equalsIgnoreCase(jugador.nombre);
     }
 
