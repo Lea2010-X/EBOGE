@@ -3,138 +3,192 @@ package Modelo;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Mapa {
 
-	private int anchoMapa;
-	private int largoMapa;
+    private int anchoMapa;
+    private int largoMapa;
 
-	private int anchoCasilla;
-	private int largoCasilla;
+    private int anchoCasilla;
+    private int largoCasilla;
 
-	private TipoCasilla[] tiposPorCasilla;
-	private String rutaMapa;
+    private TipoCasilla[] tiposPorCasilla;
+    private String rutaMapa;
 
-	public Mapa(int anchoMapa, int largoMapa, int anchoCasilla, int largoCasilla, String rutaMapa) {
-		this.anchoMapa = anchoMapa;
-		this.largoMapa = largoMapa;
-		this.anchoCasilla = anchoCasilla;
-		this.largoCasilla = largoCasilla;
-		this.rutaMapa = rutaMapa;
+    // ==========================
+    // Constructor
+    // ==========================
 
-		int totalCasillas = anchoMapa * largoMapa;
-		this.tiposPorCasilla = new TipoCasilla[totalCasillas];
+    public Mapa(int anchoMapa, int largoMapa, int anchoCasilla, int largoCasilla, String rutaMapa) {
+        this.anchoMapa = anchoMapa;
+        this.largoMapa = largoMapa;
+        this.anchoCasilla = anchoCasilla;
+        this.largoCasilla = largoCasilla;
+        this.rutaMapa = rutaMapa;
 
-		cargarMapa();
-	}
+        int totalCasillas = anchoMapa * largoMapa;
+        this.tiposPorCasilla = new TipoCasilla[totalCasillas];
 
-	//Faltan metodos que utilizan jugador
+        cargarMapa();
+    }
 
-	public TipoCasilla identificarTipoDeCasilla(int numCasilla) {
-		if (numCasilla < 0 || numCasilla >= tiposPorCasilla.length) {
-			return null;
-		}
-		return tiposPorCasilla[numCasilla];
-	}
-	
-	public void eliminarTxt() {
-		try {
-			File archivo = new File(rutaMapa);
-			if (archivo.exists()) {
-				archivo.delete();
-			}
-		} catch (Exception e) {
-			System.err.println("Error al eliminar el archivo del mapa.");
-		}
-	}
+    // ==========================
+    // Getters
+    // ==========================
 
-	private void cargarMapa() {
-		try (BufferedReader lector = new BufferedReader(new FileReader(rutaMapa))) {
+    public int getTotalCasillas() {
+        return tiposPorCasilla.length;
+    }
 
-			String linea;
+    public int getAnchoMapa() {
+        return anchoMapa;
+    }
 
-			while ((linea = lector.readLine()) != null) {
+    public int getLargoMapa() {
+        return largoMapa;
+    }
 
-				int pos = 0;
+    public int getAnchoCasilla() {
+        return anchoCasilla;
+    }
 
-				while (true) {
+    public int getLargoCasilla() {
+        return largoCasilla;
+    }
 
-					int inicio = linea.indexOf('[', pos);
-					if (inicio == -1)
-						break;
+    public String getRutaMapa() {
+        return rutaMapa;
+    }
 
-					int fin = linea.indexOf(']', inicio);
-					if (fin == -1)
-						break;
+    // ==========================
+    // Métodos públicos del mapa
+    // ==========================
 
-					String contenido = linea.substring(inicio + 1, fin);
-					String[] partes = contenido.split(",");
+    /**
+     * Devuelve el tipo de casilla asociado a un número de casilla.
+     * Si el índice es inválido, devuelve null.
+     */
+    public TipoCasilla identificarTipoDeCasilla(int numeroCasilla) {
+        if (numeroCasilla < 0 || numeroCasilla >= tiposPorCasilla.length) {
+            return null;
+        }
+        return tiposPorCasilla[numeroCasilla];
+    }
+    
+    
+    /**
+     * Modifica el tipo de una casilla específica en tiempo de ejecución.
+     * Cumple con el requisito RF-11 (Modificación del tablero) para cartas Maestras.
+     * * @param numeroCasilla El índice de la casilla a modificar (0 a N-1).
+     * @param nuevoTipo El nuevo enum TipoCasilla que tendrá esta posición.
+     */
+    public void cambiarTipoDeCasilla(int numeroCasilla, TipoCasilla nuevoTipo) {
+        //Validar si la casilla existe en el tablero
+        if (numeroCasilla >= 0 && numeroCasilla < tiposPorCasilla.length) {
+            
+            this.tiposPorCasilla[numeroCasilla] = nuevoTipo;
+                     
+        } else {
+            System.err.println("Error: Intento de modificar una casilla fuera de rango (" + numeroCasilla + ")");
+        }
+    }
+    
 
-					if (partes.length >= 2) {
-						int numCasilla = Integer.parseInt(partes[0].trim());
-						char simbolo = partes[1].trim().charAt(0);
+    /**
+     * Elimina el archivo de texto asociado al mapa, si existe.
+     */
+    public void eliminarTxt() {
+        try {
+            File archivo = new File(rutaMapa);
+            if (archivo.exists()) {
+                archivo.delete();
+            }
+        } catch (Exception excepcion) {
+            System.err.println("Error al eliminar el archivo del mapa.");
+        }
+    }
 
-						TipoCasilla tipo = convertirLetraATipo(simbolo);
+    /**
+     * Imprime en consola el arreglo lineal de tipos de casilla
+     * (principalmente para depuración).
+     */
+    public void imprimirMapaEnConsola() {
+        System.out.println("=== Contenido del mapa ===");
 
-						if (numCasilla >= 0 && numCasilla < tiposPorCasilla.length) {
-							tiposPorCasilla[numCasilla] = tipo;
-						}
-					}
+        for (int indice = 0; indice < tiposPorCasilla.length; indice++) {
+            TipoCasilla tipo = tiposPorCasilla[indice];
 
-					pos = fin + 1;
-				}
-			}
+            if (tipo == null) {
+                System.out.println("Casilla " + indice + ": (sin tipo)");
+            } else {
+                System.out.println("Casilla " + indice + ": " + tipo.name());
+            }
+        }
+    }
 
-		} catch (Exception e) {
-			System.err.println("Error al cargar el mapa desde el archivo: " + rutaMapa);
-		}
-	}
+    // ==========================
+    // Métodos privados
+    // ==========================
 
-	private TipoCasilla convertirLetraATipo(char letra) {
-		for (TipoCasilla tipo : TipoCasilla.values()) {
-			if (tipo.getSimbolo() == letra) {
-				return tipo;
-			}
-		}
-		return null;
-	}
+    /**
+     * Lee el archivo de mapa y rellena el arreglo tiposPorCasilla.
+     * El formato esperado por casilla es: [numero,tipo,()]
+     */
+    private void cargarMapa() {
+        try (BufferedReader lector = new BufferedReader(new FileReader(rutaMapa))) {
 
-	public void imprimirMapaEnConsola() {
-		System.out.println("=== Contenido del mapa ===");
+            String lineaActual;
 
-		for (int i = 0; i < tiposPorCasilla.length; i++) {
-			TipoCasilla tipo = tiposPorCasilla[i];
+            while ((lineaActual = lector.readLine()) != null) {
 
-			if (tipo == null) {
-				System.out.println("Casilla " + i + ": (sin tipo)");
-			} else {
-				System.out.println("Casilla " + i + ": " + tipo.name());
-			}
-		}
-	}
-	
-	public int geTotalCasillas() {
-		return tiposPorCasilla.length;
-	}
+                int posicionBusqueda = 0;
 
-	public int getAnchoMapa() {
-		return anchoMapa;
-	}
+                while (true) {
+                    int inicioCasilla = lineaActual.indexOf('[', posicionBusqueda);
+                    if (inicioCasilla == -1) {
+                        break;
+                    }
 
-	public int getLargoMapa() {
-		return largoMapa;
-	}
+                    int finCasilla = lineaActual.indexOf(']', inicioCasilla);
+                    if (finCasilla == -1) {
+                        break;
+                    }
 
-	public int getAnchoCasilla() {
-		return anchoCasilla;
-	}
+                    String contenidoCasilla = lineaActual.substring(inicioCasilla + 1, finCasilla);
+                    String[] partesCasilla = contenidoCasilla.split(",");
 
-	public int getLargoCasilla() {
-		return largoCasilla;
-	}
+                    if (partesCasilla.length >= 2) {
+                        int numeroCasilla = Integer.parseInt(partesCasilla[0].trim());
+                        char simboloTipo = partesCasilla[1].trim().charAt(0);
 
-	public String getRutaMapa() {
-		return rutaMapa;
-	}
+                        TipoCasilla tipo = convertirLetraATipo(simboloTipo);
+
+                        if (numeroCasilla >= 0 && numeroCasilla < tiposPorCasilla.length) {
+                            tiposPorCasilla[numeroCasilla] = tipo;
+                        }
+                    }
+
+                    posicionBusqueda = finCasilla + 1;
+                }
+            }
+
+        } catch (IOException excepcion) {
+            System.err.println("Error al cargar el mapa desde el archivo: " + rutaMapa);
+        }
+    }
+
+    /**
+     * Convierte el símbolo del archivo (letra) al enum TipoCasilla.
+     */
+    
+    private TipoCasilla convertirLetraATipo(char simboloCasilla) {
+	    	for (TipoCasilla tipo : TipoCasilla.values()) {
+	            if (tipo.getSimbolo() == simboloCasilla) {
+	                return tipo;
+	            }
+	    }
+	    	return null;
+    }
 }

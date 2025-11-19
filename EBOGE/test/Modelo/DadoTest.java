@@ -1,4 +1,4 @@
-package com.example;
+package Modelo;
 
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
