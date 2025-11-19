@@ -20,6 +20,7 @@ public class GeneradorDeMapa {
 
     private Casilla[][] casillas;
 
+    
     public Mapa generarMapa(int anchoPanel, int altoPanel, int ladosDelDado) {
 
         this.anchoPanel = anchoPanel;
@@ -53,6 +54,7 @@ public class GeneradorDeMapa {
         altoCasilla = altoPanel / cantidadFilas;
     }
 
+    //Métodos privados
     private void recorrerEspiralYCrearCasillas() {
 
         int limiteSuperior = 0;
