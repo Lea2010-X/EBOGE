@@ -48,8 +48,7 @@ public class Partida {
             case MAESTRA:
                 return mazoMaestras;
             default:
-                // Lanzar una excepción o devolver null si el tipo no es un mazo
-                // (ej. TRAMPA o NORMAL no tienen mazos)
+
                 return null;
         }
     }
@@ -70,6 +69,8 @@ public class Partida {
     public int getTotalCasillas() {
     		return this.getMapa().getTotalCasillas();
     }
+    
+    
     
     
 }
