@@ -39,6 +39,10 @@ public class Mapa {
     public int getLargoCasilla() {
         return largoCasilla;
     }
+    
+    public Casilla[][] getCasillas() {
+        return casillas;
+    }
 
     public TipoCasilla identificarTipoDeCasilla(int numeroCasilla) {
     	
