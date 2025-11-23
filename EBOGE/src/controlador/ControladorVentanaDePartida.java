@@ -35,7 +35,7 @@ public class ControladorVentanaDePartida implements Initializable {
 
 	@FXML
 	private Button btnAbrirMazoPropio;
-
+	// hola
 	@FXML
 	private Button btnAbrirMazoObjetivo;
 

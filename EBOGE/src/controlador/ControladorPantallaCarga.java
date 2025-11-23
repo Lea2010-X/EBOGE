@@ -84,7 +84,7 @@ public class ControladorPantallaCarga implements Initializable{
         }
 		
 		timelineConsejos = new Timeline();
-		KeyFrame keyframe = new KeyFrame(Duration.millis(5000), event -> {			
+		KeyFrame keyframe = new KeyFrame(Duration.millis(4500), event -> {			
 			Random random = new Random();
 		    int indiceAleatorio = random.nextInt(listaCuriosidades.size());	        
 		    lblDatosCuriosos.setText(listaCuriosidades.get(indiceAleatorio));	    				
