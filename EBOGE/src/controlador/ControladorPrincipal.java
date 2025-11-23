@@ -38,7 +38,7 @@ public class ControladorPrincipal {
 
 		this.ventanaPrincipal = stage;
 
-		mostrarVentanaDeInicio();
+		mostrarVentanaDeCarga();
 		configurarPantallaCompleta(this.ventanaPrincipal);
 	}
 
