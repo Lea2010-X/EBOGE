@@ -29,6 +29,7 @@ public class ControladorPrincipal {
     private static final double TAMANIO_FUENTE_BASE = 10.0; // necesario para cargar las fuentes
 
 	private Stage ventanaPrincipal;
+	private int ladosDelDado;
 
 	public ControladorPrincipal() {
 
@@ -37,6 +38,7 @@ public class ControladorPrincipal {
 	public void iniciarEBOGE(Stage stage, int ladosDelDado) throws IOException {
 
 		this.ventanaPrincipal = stage;
+		this.ladosDelDado = ladosDelDado;
 
 		mostrarVentanaDeCarga();
 		configurarPantallaCompleta(this.ventanaPrincipal);
@@ -63,7 +65,28 @@ public class ControladorPrincipal {
 
 	public void mostrarVentanaDeCarga() {
 		try {
-            inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_CARGAR_PARTIDA, TITULO_VENTANA_PRINCIPAL);           
+			//Solo para este caso no haremos uso del metodo InicializarInterfaz porque el compartamiento es diferente
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(RUTA_VISTA_CARGAR_PARTIDA));
+            Parent raiz = loader.load();
+            
+            ControladorPantallaCarga cargaController = loader.getController();
+            
+            cargaController.setOnCargaTerminada(() -> {
+                            
+            mostrarVentanaDePartida();
+            });  
+            
+            Scene escena = new Scene(raiz);
+
+    	    ventanaPrincipal.setTitle("EBOGE - Cargando");
+    	    ventanaPrincipal.setScene(escena);
+    	    
+    	    ventanaPrincipal.setResizable(false);
+    	    
+    	    ventanaPrincipal.setFullScreenExitHint(HINT_PANTALLA_COMPLETA);
+    	    ventanaPrincipal.setFullScreen(true);
+    	    
+    	    ventanaPrincipal.show();
         } catch (Exception e) {
             System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
             e.printStackTrace();
@@ -71,10 +94,10 @@ public class ControladorPrincipal {
 		
 	}
 
-	private void mostrarVentanaDePartida(int ladosDelDado) throws IOException {
-
+	private void mostrarVentanaDePartida() {
+		try {
 	    FXMLLoader loader = inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_PARTIDA, "EBOGE - Partida");
-
+	    
 	    ControladorVentanaDePartida controladorPartida = loader.getController();
 
 	    Platform.runLater(() -> {
@@ -88,7 +111,11 @@ public class ControladorPrincipal {
 	        Mapa mapaGenerado = generadorDeMapa.generarMapa((int) anchoTablero, (int) altoTablero, ladosDelDado);
 
 	        controladorPartida.dibujarTablero(mapaGenerado);
-	    });
+	    });       
+	    } catch(Exception e) {
+	    	System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
+            e.printStackTrace();
+	    }
 	}
 
 	public void mostrarVentanaDeVictoria() {

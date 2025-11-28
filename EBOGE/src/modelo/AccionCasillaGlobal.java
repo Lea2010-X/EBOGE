@@ -6,7 +6,7 @@ import modelo.cartas.Mazo;
 import modelo.cartas.TipoCarta;
 import modelo.jugador.Jugador;
 
-public class AcccionCasillaGlobal implements AccionCasilla {
+public class AccionCasillaGlobal implements AccionCasilla {
 
 	@Override
 	public void ejecutar(Partida partida, Jugador jugadorActual) {

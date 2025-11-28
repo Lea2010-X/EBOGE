@@ -2,97 +2,88 @@ package modelo;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import modelo.jugador.Jugador;
 import modelo.mapa.TipoCasilla;
+// Asegúrate de importar tus acciones...
 
 public class MotorDeTurnos {
 
     private Partida partida; 
     private Jugador jugadorEnTurno; 
     
-    // Directorio de especialistas (Strategy Pattern)
+    // Strategy Pattern
     private Map<TipoCasilla, AccionCasilla> accionesPorCasilla; 
 
     public MotorDeTurnos(Partida partida) {
         this.partida = partida;
         this.accionesPorCasilla = new HashMap<>();
-        
         inicializarAcciones();
     }
 
     private void inicializarAcciones() {
-     // Aquí cargamos a todos los especialistas (falta por implementar)
+        
         accionesPorCasilla.put(TipoCasilla.PROPIA,   new AccionCasillaPropia());
-     /* accionesPorCasilla.put(TipoCasilla.GLOBAL,   new AccionCasillaGlobal());
+        accionesPorCasilla.put(TipoCasilla.GLOBAL,   new AccionCasillaGlobal());
         accionesPorCasilla.put(TipoCasilla.MAESTRA,  new AccionCasillaMaestra());
         accionesPorCasilla.put(TipoCasilla.BLANCO,   new AccionCasillaBlanco());  
         accionesPorCasilla.put(TipoCasilla.TRAMPA,   new AccionCasillaTrampa());
         
         accionesPorCasilla.put(TipoCasilla.NORMAL,   new AccionCasillaSegura());
         accionesPorCasilla.put(TipoCasilla.INICIO,   new AccionCasillaSegura());
-        accionesPorCasilla.put(TipoCasilla.VICTORIA, new AccionCasillaSegura()); 
-     */
+        
+        accionesPorCasilla.put(TipoCasilla.FINAL,    new AccionCasillaVictoria()); 
     }
 
-    public void ejecutarTurno() { 
-        
+
+    public Jugador iniciarTurno() {
         this.jugadorEnTurno = partida.getJugadorActual();
-
-        // 1. Validar estado (Stun/Inmovilizado)
-        // Asumimos que Jugador tiene lógica de efectos
-        /* jugadorEnTurno.actualizarEfectos();
-        if (jugadorEnTurno.estaInmovilizado()) {
-             finalizarTurno();
-             return;
-        }
-        */
-
-        int pasos = realizarLanzamiento(); 
-        System.out.println("Turno de " + jugadorEnTurno.getNombre() + " | Dado: " + pasos);
-
         
-        realizarMovimiento(pasos); 
+        // Aquí validarías si está aturdido, etc.
+        // if (jugadorEnTurno.estaAturdido()) return null;
         
-        //Para la logica de los tiros dobles
-        while (jugadorEnTurno.requiereActivacion()) {
-            jugadorEnTurno.setRequiereActivacion(false); //Ponemos la bandera en false para evitar ciclos infinitos
-
-            int posicionActual = jugadorEnTurno.getPosicion();
-
-            realizarAccionDeCasilla(posicionActual); 
-        }
-        
-        finalizarTurno(); 
+        return jugadorEnTurno;
     }
 
-    private int realizarLanzamiento() { 
+    public int lanzarDado() {
         return partida.getDado().lanzar();
     }
 
-    private int realizarMovimiento(int pasos) { 
+    // Este método solo actualiza el dato lógico. La animación la hace el Controller.
+    public int calcularNuevaPosicion(int pasos) {
         int totalCasillas = partida.getMapa().getTotalCasillas();
-        
         jugadorEnTurno.avanzar(pasos, totalCasillas);
-        
         return jugadorEnTurno.getPosicion();
     }
 
-    private void realizarAccionDeCasilla(int posicion) { 
+    public TipoCasilla obtenerTipoCasillaActual() {
+        return partida.getMapa().identificarTipoDeCasilla(jugadorEnTurno.getPosicion());
+    }
+
+    public void ejecutarAccionEnCasilla() {
+        int posicion = jugadorEnTurno.getPosicion();
         TipoCasilla tipo = partida.getMapa().identificarTipoDeCasilla(posicion);
         
         AccionCasilla accion = accionesPorCasilla.get(tipo);
-
         if (accion != null) {
             accion.ejecutar(partida, jugadorEnTurno); 
         }
+        
+    }
+    
+    //Para turnos dobles, el controlador debe manejar esto
+    public boolean requiereOtroTurno() {
+    	return jugadorEnTurno.requiereActivacion();
     }
 
-    private void finalizarTurno() { 
-        // Verificar condiciones de victoria
-        if (jugadorEnTurno.getPosicion() >= partida.getMapa().getTotalCasillas() - 1) {
-        } else {
+    public void terminarTurno() {
+        // Verificar si alguien ganó (generalmente lo maneja AccionCasillaVictoria, 
+        // pero aquí es el cambio de turno)
+        if (!partida.getJuegoTerminado()) {
             partida.pasarAlSiguienteJugador();
         }
+    }
+    
+    public Jugador getJugadorActual() {
+    	return this.jugadorEnTurno;
     }
 }

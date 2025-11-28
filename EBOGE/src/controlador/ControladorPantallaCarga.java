@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
@@ -32,7 +33,7 @@ public class ControladorPantallaCarga implements Initializable{
      private static final double PORCENTAJE_MAXIMO = 1.0;
      private static final int PORCENTAJE_CONVERSOR = 100;
      
-     
+     private Runnable accionAlTerminar;
     
 	 @FXML
 	 private ProgressBar barraCarga;
@@ -68,7 +69,16 @@ public class ControladorPantallaCarga implements Initializable{
         if (progresoActual >= PORCENTAJE_MAXIMO) {
         	timelineBarra.stop();
             timelineConsejos.stop();
-        	}
+            
+            Stage stage = null;
+            if (barraCarga.getScene() != null) {
+                stage = (Stage) barraCarga.getScene().getWindow();
+            }
+
+            if (accionAlTerminar != null) {
+                accionAlTerminar.run(); 
+            }        
+        }
         });
         
         timelineBarra.getKeyFrames().add(keyFrame);        
@@ -121,5 +131,9 @@ public class ControladorPantallaCarga implements Initializable{
 		
 		return listaCuriosidades;
 	}
+	
+	public void setOnCargaTerminada(Runnable accion) {
+        this.accionAlTerminar = accion;
+    }
 	
 }

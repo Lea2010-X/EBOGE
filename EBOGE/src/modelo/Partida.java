@@ -16,6 +16,7 @@ public class Partida {
     private Mazo mazoMaestras;
     private Dado dado;
     private int indexJugadorActual;
+    private boolean juegoTerminado;
     
 
     // Constructor
@@ -24,6 +25,7 @@ public class Partida {
         this.mapa = mapa;
         this.dado = new Dado(carasDado);
         this.indexJugadorActual = 0;
+        this.juegoTerminado = false;
         
         // Creacion y barajeo de los mazos
         this.mazoPropias = new Mazo(TipoCarta.PROPIA);
@@ -70,11 +72,17 @@ public class Partida {
     		indexJugadorActual = (indexJugadorActual + 1) % jugadores.size();
     }
     
-    //nuevo!
     public int getTotalCasillas() {
     		return this.getMapa().getTotalCasillas();
     }
     
+    public Boolean getJuegoTerminado() {
+    	return juegoTerminado;
+    }
+    
+    public void setJuegoTerminado(Boolean estadoJuego) {
+    	juegoTerminado = estadoJuego;
+    }
     
     
     

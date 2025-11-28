@@ -1,4 +1,4 @@
-package modelo;
+package modelo.mapa;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

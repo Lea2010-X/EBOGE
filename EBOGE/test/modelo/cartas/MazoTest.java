@@ -1,4 +1,4 @@
-package modelo;
+package modelo.cartas;
 
 
 import static org.junit.jupiter.api.Assertions.assertAll;
