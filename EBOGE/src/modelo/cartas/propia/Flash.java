@@ -13,13 +13,15 @@ public class Flash extends Carta implements EfectoSinObjetivo{
 	}
 
 	@Override
-    public void aplicar(Partida partida) {
-       Jugador jugadorActivo = partida.getJugadorActual();
-   	   int carasDado=partida.getDado().getCaras();
-   	   
-   	   int avance = (int) Math.ceil(carasDado / 3.0);
-       int casillasTotales = partida.getTotalCasillas();
-       jugadorActivo.avanzar(avance, casillasTotales);    
-    }
+	public void aplicar(Partida partida) {
+	    Jugador jugadorActivo = partida.getJugadorActual();
+	    int carasDado = partida.getDado().getCaras();
+
+	    int avance = (int) Math.ceil(carasDado / 3.0);
+
+
+	    partida.moverPorDado(jugadorActivo, avance);
+	}
+
 
 }

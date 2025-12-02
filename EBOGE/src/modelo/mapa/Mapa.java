@@ -1,5 +1,7 @@
 package modelo.mapa;
 
+import modelo.CambioCasillaEventManager;
+
 public class Mapa {
 
     private int anchoMapa;   
@@ -9,6 +11,7 @@ public class Mapa {
     private int largoCasilla;
 
     private Casilla[][] casillas;
+    private final CambioCasillaEventManager gestorCambios = new CambioCasillaEventManager();
 
     // Constructor
     public Mapa(int anchoMapa, int largoMapa, int anchoCasilla, int largoCasilla, Casilla[][] casillas) {
@@ -50,16 +53,25 @@ public class Mapa {
         return (casilla != null) ? casilla.getTipo() : null;
     }
 
+    
     public void modificarTipoDeCasilla(int numeroCasilla, TipoCasilla nuevoTipo) {
-    	
+
         if (nuevoTipo == null) {
             return;
         }
 
         Casilla casilla = buscarCasillaPorIndice(numeroCasilla);
         if (casilla != null) {
+            TipoCasilla anterior = casilla.getTipo();
             casilla.setTipo(nuevoTipo);
+
+            // Notificamos el cambio:
+            gestorCambios.notificar(casilla.getIndice(), anterior, nuevoTipo);
         }
+    }
+    public CambioCasillaEventManager getGestroDeCambios() {
+		return gestorCambios;
+    	
     }
     
 

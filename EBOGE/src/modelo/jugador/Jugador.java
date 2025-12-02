@@ -9,155 +9,138 @@ import modelo.Dado;
 
 public class Jugador {
 
-	private final String nombre;
-	private final ColorJugador color;
-	private int posicion;
-	private int ultimoMovimiento;
-	private boolean requiereActivacion;
-	private EstadoJugador estado;
-	private final List<EfectoJugador> efectosActivos;
+    private final String nombre;
+    private final ColorJugador color;
+    private int posicion;
+    private int ultimoMovimiento;
+    private boolean requiereActivacion;
+    private EstadoJugador estado;
+    private final List<EfectoJugador> efectosActivos;
 
-	// Constructor
-	public Jugador(String nombre, ColorJugador color) {
+    public Jugador(String nombre, ColorJugador color) {
 
-		if (nombre == null || nombre.trim().isEmpty()) {
-			throw new IllegalArgumentException("El nombre del jugador no puede ser nulo o vacío.");
-		}
-		this.requiereActivacion = false;
-		this.nombre = nombre.trim();
-		this.color = Objects.requireNonNull(color, "El color no puede ser nulo.");
-		this.posicion = 0;
-		this.estado = EstadoJugador.NORMAL;
-		this.efectosActivos = new ArrayList<>();
-		this.ultimoMovimiento = 0;
-	}
-
-	public void aplicarEfecto(EfectoJugador efecto) {
-		Objects.requireNonNull(efecto, "El efecto no puede ser nulo.");
-		this.efectosActivos.add(efecto);
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del jugador no puede ser nulo o vacío.");
+        }
+        this.requiereActivacion = false;
+        this.nombre = nombre.trim();
+        this.color = Objects.requireNonNull(color, "El color no puede ser nulo.");
+        this.posicion = 0;
+        this.estado = EstadoJugador.NORMAL;
+        this.efectosActivos = new ArrayList<>();
+        this.ultimoMovimiento = 0;
+    }
 
 
-		efecto.aplicarEfectoInicial(this);
-	}
 
-	public void actualizarEfectos() {
+    public void aplicarEfecto(EfectoJugador efecto) {
+        Objects.requireNonNull(efecto, "El efecto no puede ser nulo.");
+        this.efectosActivos.add(efecto);
+        efecto.aplicarEfectoInicial(this);
+    }
 
-		Iterator<EfectoJugador> iterador = this.efectosActivos.iterator();
+    public void actualizarEfectos() {
 
-		while (iterador.hasNext()) {
-			EfectoJugador efecto = iterador.next();
+        Iterator<EfectoJugador> iterador = this.efectosActivos.iterator();
 
-			efecto.actualizarEfectoPorTurno(this);
+        while (iterador.hasNext()) {
+            EfectoJugador efecto = iterador.next();
 
-			if (efecto.haExpirado()) {
+            efecto.actualizarEfectoPorTurno(this);
 
-				efecto.removerEfecto(this);
-
-				iterador.remove();
-			}
-		}
-	}
-
-	public void avanzar(int cantidad, int totalCasillas) {
-
-		
-		this.ultimoMovimiento = cantidad;
-		int nuevaPosicion = this.posicion + cantidad;
-
-		if (nuevaPosicion >= totalCasillas) {
-			this.posicion = totalCasillas;
-		} else {
-			this.posicion = nuevaPosicion;
-		}
-		this.requiereActivacion = true;
-	}
+            if (efecto.haExpirado()) {
+                efecto.removerEfecto(this);
+                iterador.remove();
+            }
+        }
+    }
 
 
-	public void retroceder(int cantidad) {
-		this.ultimoMovimiento = -cantidad; 
-		this.posicion -= cantidad;
-		if (this.posicion < 0) {
-			this.posicion = 0; 
-		}
-	}
+
+    public void mover(int pasos, int totalCasillas) {
+        this.ultimoMovimiento = pasos;
+
+        int nuevaPos = this.posicion + pasos;
+
+        if (nuevaPos < 0) {
+            nuevaPos = 0;
+        } else if (nuevaPos >= totalCasillas) {
+            nuevaPos = totalCasillas - 1;
+        }
+
+        this.posicion = nuevaPos;
+    }
+
+    public int lanzarDado(Dado dado) {
+        Objects.requireNonNull(dado, "El dado no puede ser nulo.");
+
+        boolean tieneMovimientoDoble = this.efectosActivos.stream()
+                .anyMatch(efecto -> efecto.getNombre().equals("Movimiento Doble"));
+
+        int resultadoBase = dado.lanzar();
+
+        return tieneMovimientoDoble ? (resultadoBase * 2) : resultadoBase;
+    }
 
 
-	public int lanzarDado(Dado dado) {
-		Objects.requireNonNull(dado, "El dado no puede ser nulo.");
+    public EstadoJugador getEstado() {
+        return estado;
+    }
 
-		boolean tieneMovimientoDoble = this.efectosActivos.stream()
-				.anyMatch(efecto -> efecto.getNombre().equals("Movimiento Doble"));
+    public void setEstado(EstadoJugador estado) {
+        this.estado = estado;
+    }
 
-		int resultadoBase = dado.lanzar();
+    public boolean estaInmovilizado() {
+        return this.estado == EstadoJugador.INMOVILIZADO;
+    }
 
-		return tieneMovimientoDoble ? (resultadoBase * 2) : resultadoBase;
-	}
+    public String getNombre() {
+        return nombre;
+    }
 
-	// Getters y Setters
+    public String getColor() {
+        return color.getCodigoHex();
+    }
 
+    public int getPosicion() {
+        return posicion;
+    }
 
-	public EstadoJugador getEstado() {
-		return estado;
-	}
+    public void setPosicion(int posicion) {
+        this.posicion = posicion;
+    }
 
-	public void setEstado(EstadoJugador estado) {
-		this.estado = estado;
-	}
+    public int getUltimoMovimiento() {
+        return ultimoMovimiento;
+    }
 
+    public boolean requiereActivacion() {
+        return requiereActivacion;
+    }
 
-	public boolean estaInmovilizado() {
-		return this.estado == EstadoJugador.INMOVILIZADO;
-	}
+    public void setRequiereActivacion(boolean requiereActivacion) {
+        this.requiereActivacion = requiereActivacion;
+    }
 
-	public String getNombre() {
-		return nombre;
-	}
+    public List<EfectoJugador> getEfectosActivos() {
+        return new ArrayList<>(this.efectosActivos);
+    }
 
-	public ColorJugador getColor() {
-		return color;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Jugador jugador = (Jugador) obj;
 
-	public int getPosicion() {
-		return posicion;
-	}
+        return nombre.equalsIgnoreCase(jugador.nombre);
+    }
 
-	public int getUltimoMovimiento() {
-		return ultimoMovimiento;
-	}
-
-	public void setPosicion(int posicion) {
-		this.posicion = posicion;
-	}
-
-	public boolean requiereActivacion() {
-		return requiereActivacion;
-	}
-
-	public void setRequiereActivacion(boolean requiereActivacion) {
-		this.requiereActivacion = requiereActivacion;
-	}
-
-
-	public List<EfectoJugador> getEfectosActivos() {
-		return new ArrayList<>(this.efectosActivos);
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null || getClass() != obj.getClass())
-			return false;
-		Jugador jugador = (Jugador) obj;
-
-		return nombre.equalsIgnoreCase(jugador.nombre);
-	}
-
-
-	@Override
-	public String toString() {
-		return "Jugador{" + "nombre='" + nombre + '\'' + ", color=" + color + ", posicion=" + posicion + ", estado="
-				+ estado + '}';
-	}
+    @Override
+    public String toString() {
+        return "Jugador{" + "nombre='" + nombre + '\'' + ", color=" + color + ", posicion=" + posicion + ", estado="
+                + estado + '}';
+    }
 }

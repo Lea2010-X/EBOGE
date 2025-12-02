@@ -6,21 +6,13 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	private static int ladosDado;
+    @Override
+    public void start(Stage stage) throws Exception {
+        ControladorPrincipal controladorPrincipal = new ControladorPrincipal();
+        controladorPrincipal.iniciarEBOGE(stage);
+    }
 
-	public static void main(String[] args) {
-
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Ingresa los lados del dado: ");
-		ladosDado = scanner.nextInt();
-
-		launch(args);
-	}
-
-	@Override
-	public void start(Stage stage) throws Exception {
-
-		ControladorPrincipal controladorPrincipal = new ControladorPrincipal();
-		controladorPrincipal.iniciarEBOGE(stage, ladosDado);
-	}
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

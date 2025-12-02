@@ -13,26 +13,24 @@ import modelo.jugador.Jugador;
 import modelo.mapa.Mapa;
 import modelo.mapa.TipoCasilla;
 
-public class DistorsionDelEntorno extends Carta implements EfectoSinObjetivo{
+public class DistorsionDelEntorno extends Carta implements EfectoSinObjetivo {
 	
-	private Random random = new Random();
+    private Random random = new Random();
 
     public DistorsionDelEntorno() {
-        super("Distorsion del entorno", TipoCarta.GLOBAL, "/imagenes/Cartas/DistorsionDelEntorno.png");
+        super("Distorsion del entorno", TipoCarta.GLOBAL, "/imagenes/Cartas/DistorcionDelEntorno.png");
     }
 
-	@Override
-	public void aplicar(Partida partida) {
-        
+    @Override
+    public void aplicar(Partida partida) {
+
         Mapa mapa = partida.getMapa();
         List<Jugador> jugadores = partida.getJugadores();
 
-        // 1. Necesitamos encontrar todas las casillas "Normales"
         List<Integer> casillasNormales = new ArrayList<>();
         int totalCasillas = mapa.getTotalCasillas();
-        
+
         for (int i = 0; i < totalCasillas; i++) {
-            // (Asumimos que tienes un enum TipoCasilla.NORMAL)
             if (mapa.identificarTipoDeCasilla(i) == TipoCasilla.NORMAL) {
                 casillasNormales.add(i);
             }
@@ -43,18 +41,20 @@ public class DistorsionDelEntorno extends Carta implements EfectoSinObjetivo{
             return;
         }
 
-        // 2. Barajamos las posiciones
         Collections.shuffle(casillasNormales, random);
 
-        // 3. Reubicamos a cada jugador en una casilla normal
         for (int i = 0; i < jugadores.size(); i++) {
-            // Tomamos una posición aleatoria (o la i-ésima barajada)
-            // Usamos módulo (%) para evitar error si hay más jugadores que casillas
-            int nuevaPosicion = casillasNormales.get(i % casillasNormales.size());
-            
+
             Jugador j = jugadores.get(i);
-            j.setPosicion(nuevaPosicion);
-            System.out.println(j.getNombre() + " es transportado a la casilla " + nuevaPosicion);
+            int destino = casillasNormales.get(i % casillasNormales.size());
+
+            int pasos = destino - j.getPosicion();
+
+            partida.moverPorCarta(j, pasos);
+
+            System.out.println(j.getNombre() + " es transportado a la casilla " + destino);
         }
-	}
-}	
+    }
+}
+
+

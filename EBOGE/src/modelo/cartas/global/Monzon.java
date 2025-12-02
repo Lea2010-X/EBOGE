@@ -16,13 +16,12 @@ public class Monzon extends Carta implements EfectoSinObjetivo{
 
 	@Override
 	public void aplicar(Partida partida) {
+	    List<Jugador> jugadores = partida.getJugadores();
+	    int carasDado = partida.getDado().getCaras();
+	    int retroceso = (int) Math.ceil(carasDado / 2.0);
 
-        List<Jugador> jugadores = partida.getJugadores();
-    	int carasDado=partida.getDado().getCaras();
-       	int retroceso = (int) Math.ceil(carasDado / 2.0);
-       	
-        for (Jugador jugador : jugadores) {
-            jugador.retroceder(retroceso);
-        }
-	}    
+	    for (Jugador jugador : jugadores) {
+	        partida.moverPorCarta(jugador, -retroceso);
+	    }
+	}
 }

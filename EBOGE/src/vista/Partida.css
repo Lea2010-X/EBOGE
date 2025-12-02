@@ -1,16 +1,15 @@
-
 #panelFondo {
-	
     -fx-background-image: url("/imagenes/FondoDePartida.png");
     -fx-background-size: cover;
     -fx-background-position: center;
     -fx-background-repeat: no-repeat;
 }
 
-
+/* =======================
+ * Mazos
+ * ======================= */
 
 .mazo-propio {
-	
     -fx-background-color: transparent;
     -fx-background-image: url("/imagenes/MazoPropio.png");
     -fx-background-size: cover;
@@ -20,16 +19,12 @@
 }
 
 .mazo-propio:hover {
-	
-    -fx-effect: dropshadow(gaussian, rgba(0.0,255.0,255.0,0.7), 25.0, 0.4, 0.0, 0.0); 
+    -fx-effect: dropshadow(gaussian, rgba(0.0,255.0,255.0,0.7), 25.0, 0.4, 0.0, 0.0);
     -fx-scale-x: 1.04;
     -fx-scale-y: 1.04;
 }
 
-
-
 .mazo-target {
-	
     -fx-background-color: transparent;
     -fx-background-image: url("/imagenes/MazoBlanco.png");
     -fx-background-size: cover;
@@ -39,15 +34,12 @@
 }
 
 .mazo-target:hover {
-	
     -fx-effect: dropshadow(gaussian, rgba(255.0,255.0,255.0,0.7), 25.0, 0.4, 0.0, 0.0);
     -fx-scale-x: 1.04;
     -fx-scale-y: 1.04;
 }
 
-
 .mazo-global {
-	
     -fx-background-color: transparent;
     -fx-background-image: url("/imagenes/MazoGlobal.png");
     -fx-background-size: cover;
@@ -57,15 +49,12 @@
 }
 
 .mazo-global:hover {
-	
     -fx-effect: dropshadow(gaussian, rgba(0.0,180.0,255.0,0.7), 25.0, 0.4, 0.0, 0.0);
     -fx-scale-x: 1.04;
     -fx-scale-y: 1.04;
 }
 
-
 .mazo-maestro {
-	
     -fx-background-color: transparent;
     -fx-background-image: url("/imagenes/MazoMestro.png");
     -fx-background-size: cover;
@@ -75,15 +64,16 @@
 }
 
 .mazo-maestro:hover {
-	
     -fx-effect: dropshadow(gaussian, rgba(255.0,180.0,60.0,0.8), 30.0, 0.45, 0.0, 0.0);
     -fx-scale-x: 1.04;
     -fx-scale-y: 1.04;
 }
 
+/* =======================
+ * Botón del dado
+ * ======================= */
 
 .boton-dado {
-	
     -fx-background-color: #231F20;
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -92,9 +82,67 @@
 }
 
 .boton-dado:hover {
-	
     -fx-background-color: #333333;
     -fx-effect: dropshadow(gaussian, rgba(255.0,255.0,255.0,0.7), 18.0, 0.3, 0.0, 0.0);
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
+}
+
+/* =======================
+ * Texto de turno y dado
+ * ======================= */
+
+.turno-texto {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.turno-nombre {
+    -fx-text-fill: white;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 6, 0.4, 0, 0);
+}
+
+.resultado-dado {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 4, 0.4, 0, 0);
+}
+
+/* =======================
+ * OVERLAY DE CARTA GRANDE
+ * ======================= */
+
+/* El StackPane que cubre toda la ventana */
+#overlayCarta {
+    -fx-alignment: center;
+}
+
+/* Fondo oscuro detrás de la carta */
+.overlay-fondo {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-pref-width: 9999;
+    -fx-pref-height: 9999;
+}
+
+/* Botón que muestra la carta en grande */
+.carta-grande {
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: contain;
+
+    -fx-pref-width: 480;
+    -fx-pref-height: 640;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.85), 40, 0.7, 0, 0);
+    -fx-cursor: hand;
+}
+
+.carta-grande:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
 }

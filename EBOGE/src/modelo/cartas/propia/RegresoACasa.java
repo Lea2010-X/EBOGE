@@ -14,12 +14,14 @@ public class RegresoACasa extends Carta implements EfectoSinObjetivo{
 		
 	}
 
-    @Override
-    public void aplicar(Partida partida) {
-    	
-    	Jugador jugadorActivo = partida.getJugadorActual();
-    	jugadorActivo.retroceder(2);
-    	jugadorActivo.aplicarEfecto(new EfectoStun(2));
-    	
-    }
+	@Override
+	public void aplicar(Partida partida) {
+	    Jugador jugadorActivo = partida.getJugadorActual();
+
+
+	    partida.moverPorCarta(jugadorActivo, -2);
+
+
+	    jugadorActivo.aplicarEfecto(new EfectoStun(2));
+	}
 }

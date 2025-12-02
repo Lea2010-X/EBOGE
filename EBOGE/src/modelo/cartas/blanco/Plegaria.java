@@ -18,11 +18,10 @@ public class Plegaria extends Carta implements EfectoConObjetivo{
 
 	@Override
 	public void aplicar(Jugador jugadorObjetivo, Partida partida) {
-		
-		 int carasDado=partida.getDado().getCaras();
-		 int avance = (int) Math.ceil(carasDado / 2.0);
-		 int casillasTotales = partida.getTotalCasillas();
-		 jugadorObjetivo.avanzar(avance, casillasTotales);
+	    int carasDado = partida.getDado().getCaras();
+	    int avance = (int) Math.ceil(carasDado / 2.0);
 
+	    partida.moverPorCarta(jugadorObjetivo, avance);
 	}
+
 }

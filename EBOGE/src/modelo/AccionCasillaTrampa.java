@@ -13,8 +13,12 @@ public class AccionCasillaTrampa implements AccionCasilla {
 	public void ejecutar(Partida partida, Jugador jugadorActual) {
 		
 		int duracion = random.nextInt(4);
-
+		
+        System.out.println("El jugador "+ jugadorActual.getNombre() + "queda inmovilizado "
+        + duracion + " TURNOS");
+        
         jugadorActual.aplicarEfecto(new EfectoStun(duracion));
+
 		
 	}
 
