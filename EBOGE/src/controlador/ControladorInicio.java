@@ -38,7 +38,13 @@ public class ControladorInicio  implements Initializable{
     private static final String ICONO_SONIDO_ACTIVO = "\uf028";
     private static final String ICONO_SONIDO_MUTE = "\uf026";
     
-	
+    private ControladorPrincipal controladorPrincipal;
+    
+    public void setControladorPrincipal(ControladorPrincipal controladorPrincipal) {
+        this.controladorPrincipal = controladorPrincipal;
+    }
+    
+     
 	@FXML
 	private Button btnJugar;
 	
@@ -83,14 +89,16 @@ public class ControladorInicio  implements Initializable{
         this.accionJugar = accion;
     }
 	
-	@FXML
-	public void cargarJuego(ActionEvent event) {
-		if (accionJugar != null) {
-            accionJugar.run();
-        } else {
-            System.err.println("Error: No se ha definido la acción para el botón Jugar.");
-        }
-	}
+
+	 @FXML
+	    public void cargarJuego(ActionEvent event) {
+	        // CAMBIO 3: Usar la referencia para cambiar de pantalla
+	        if (controladorPrincipal != null) {
+	        	controladorPrincipal.mostrarVentanaDeConfiguracion();
+	        } else {
+	            System.out.println("Error: No se ha vinculado el ControladorPrincipal");
+	        }
+	    }
 	
 	@FXML 
 	public void salirJuego(ActionEvent event) {

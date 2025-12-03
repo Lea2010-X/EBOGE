@@ -45,29 +45,21 @@ public class ControladorPrincipal {
 
     public void iniciarEBOGE(Stage stage) throws IOException {
         this.ventanaPrincipal = stage;
-        configurarPantallaPrincipal(ventanaPrincipal);
-        
         mostrarVentanaDeInicio();
-    }
-
-    private void configurarPantallaPrincipal(Stage stage) {
-        stage.setTitle(TITULO_VENTANA_PRINCIPAL);
-        stage.setResizable(false);
-        stage.setMaximized(true);
     }
 
     public void mostrarVentanaDeInicio() {
         try {
             cargarFuentesGlobales();
-            
-            
+
+            // 1. Usamos inicializarInterfaz.
             FXMLLoader loader = inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_INICIO, TITULO_VENTANA_PRINCIPAL);
+
+            // 2. Conectamos el controlador
+            ControladorInicio controladorInicio = loader.getController();
+            controladorInicio.setControladorPrincipal(this);
             
-            
-            ControladorInicio inicioController = loader.getController();
-            inicioController.setOnJugar(() -> {
-                mostrarVentanaDeConfiguracion(); 
-            });
+            // Nota: La navegación a configuración se hace desde el FXML de Inicio
 
         } catch (Exception e) {
             System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
@@ -79,8 +71,6 @@ public class ControladorPrincipal {
     public void mostrarVentanaDeConfiguracion() {
         try {
             FXMLLoader loader = inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_CONFIGURACION, "EBOGE - Configuración");
-            
-            
             ControladorConfiguracion configController = loader.getController();
             configController.setControladorPrincipal(this); 
             
@@ -90,7 +80,6 @@ public class ControladorPrincipal {
         }
     }
 
-    
     public void configurarPartida(List<Jugador> jugadores, int carasDado) {
         this.jugadoresPartida = jugadores;
         this.carasDadoPartida = carasDado;
@@ -99,22 +88,16 @@ public class ControladorPrincipal {
 
     public void mostrarVentanaDeCarga() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(RUTA_VISTA_CARGAR_PARTIDA));
-            Parent raiz = loader.load();
+
+            FXMLLoader loader = inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_CARGAR_PARTIDA, "EBOGE - Cargando");
 
             ControladorPantallaCarga cargaController = loader.getController();
-
+            
+            // Usamos Platform.runLater para asegurar que la transición de ventana 
+            // ocurra en el hilo de aplicación de JavaFX al finalizar la carga.
             cargaController.setOnCargaTerminada(() -> {
-                mostrarVentanaDePartida();
+                Platform.runLater(this::mostrarVentanaDePartida);
             });
-
-            Scene escena = new Scene(raiz);
-
-            ventanaPrincipal.setTitle("EBOGE - Cargando");
-            ventanaPrincipal.setScene(escena);
-            ventanaPrincipal.setResizable(false);
-            ventanaPrincipal.setMaximized(true);
-            ventanaPrincipal.show();
 
         } catch (Exception e) {
             System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
@@ -126,7 +109,11 @@ public class ControladorPrincipal {
         try {
             FXMLLoader loader = inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_PARTIDA, "EBOGE - Partida");
             ControladorVentanaDePartida controladorPartida = loader.getController();
-
+            
+            /* * Es necesario esperar a que el layout de JavaFX termine de calcular 
+             * las dimensiones del Grid (tablero) antes de generar el mapa lógico.
+             * Sin runLater, el ancho/alto podrían ser 0.0.
+             */
             Platform.runLater(() -> {
                 double anchoTablero = controladorPartida.getAnchoTablero();
                 double altoTablero = controladorPartida.getAltoTablero();
@@ -135,7 +122,7 @@ public class ControladorPrincipal {
                 System.out.println("Alto del Tablero: " + altoTablero);
 
                 
-                iniciarPartidaReal((int) anchoTablero, (int) altoTablero);
+                iniciarPartidaNueva((int) anchoTablero, (int) altoTablero);
 
                 MotorDeTurnos motor = new MotorDeTurnos(partida);
                 controladorPartida.inicializarConMotor(motor);
@@ -148,46 +135,20 @@ public class ControladorPrincipal {
     }
 
     
-    private void iniciarPartidaReal(int anchoTablero, int altoTablero) {
-        if (this.partida != null) {
-            return;
-        }
-
+    private void iniciarPartidaNueva(int anchoTablero, int altoTablero) {
         
         if (jugadoresPartida == null || jugadoresPartida.isEmpty()) {
-            System.err.println("Error: No hay jugadores configurados. Usando defaults.");
-            crearPartidaDemo(anchoTablero, altoTablero);
-            return;
+            throw new IllegalStateException("CRÍTICO: Se intentó iniciar partida sin jugadores configurados.");
         }
 
         GeneradorDeMapa generador = new GeneradorDeMapa();
-        
         Mapa mapaGenerado = generador.generarMapa(anchoTablero, altoTablero, carasDadoPartida);
 
         this.partida = new Partida(jugadoresPartida, carasDadoPartida, mapaGenerado);
     }
 
-    
-    private void crearPartidaDemo(int anchoTablero, int altoTablero) {
-        if (this.partida != null) return;
 
-        List<Jugador> jugadores = new ArrayList<>();
-        jugadores.add(new Jugador("fLOCH", ColorJugador.AZUL));
-        jugadores.add(new Jugador("DarthNetza", ColorJugador.ROJO));
-        jugadores.add(new Jugador("eLtATUADO", ColorJugador.AMARILLO));
-
-        int carasDado = 6;
-
-        GeneradorDeMapa generador = new GeneradorDeMapa();
-        Mapa mapaGenerado = generador.generarMapa(anchoTablero, altoTablero, carasDado);
-
-        this.partida = new Partida(jugadores, carasDado, mapaGenerado);
-    }
-
-    public void mostrarVentanaDeVictoria() {
-        // pendiente
-    }
-
+  
     private void cargarFuentesGlobales() {
         cargarFuente(RUTA_FUENTE_PIXEL);
         cargarFuente(RUTA_FUENTE_ICONOS);
@@ -205,6 +166,16 @@ public class ControladorPrincipal {
         }
     }
 
+    private void aplicarParchePantallaCompleta(Stage stage) {
+        stage.setResizable(true);
+        
+        if (stage.isShowing()) {
+            stage.setMaximized(false);
+            stage.setMaximized(true);
+        } else {
+            stage.setMaximized(true);
+        }
+    }
     
     private FXMLLoader inicializarInterfaz(Stage escenario, String rutaEscena, String titulo) throws IOException {
         if (getClass().getResource(rutaEscena) == null) {
@@ -215,12 +186,10 @@ public class ControladorPrincipal {
         Parent raiz = loader.load();
 
         Scene escena = new Scene(raiz);
-
-        escenario.setTitle(titulo);
-        escenario.setScene(escena);
-        escenario.setResizable(false);
-        escenario.setMaximized(true);
-        escenario.show();
+		escenario.setTitle(titulo);
+		escenario.setScene(escena);
+		aplicarParchePantallaCompleta(ventanaPrincipal);
+	    escenario.show();
 
         return loader; 
     }
