@@ -1,52 +1,19 @@
 name: Build
-
 on:
   push:
     branches:
-      - '**'
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
   sonarqube:
-    name: SonarQube Cloud
-    runs-on: windows-latest
-
+    name: SonarQube
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Compile Java sources
-        shell: pwsh
-        run: |
-          Write-Host "Creando carpeta 'build'..."
-          New-Item -ItemType Directory -Force -Path build | Out-Null
-
-          Write-Host "Buscando archivos .java en EBOGE/src..."
-          $sources = Get-ChildItem -Recurse -Filter *.java EBOGE/src | ForEach-Object { $_.FullName }
-
-          if (-not $sources -or $sources.Count -eq 0) {
-            Write-Host "No se encontraron archivos .java en EBOGE/src"
-            exit 1
-          }
-
-          Write-Host "Compilando archivos a carpeta 'build'..."
-          javac -d build $sources
-
-          Write-Host "Contenido de 'build':"
-          Get-ChildItem -Recurse build
-
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          # Solo si te pide explícitamente la URL, si no, se usa la del binding:
-          # SONAR_HOST_URL: https://sonarqube.cloud
