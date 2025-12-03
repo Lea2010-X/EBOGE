@@ -38,6 +38,9 @@ public class ControladorVentanaDePartida implements Initializable {
 	private Label lblNombreJugador;
 	@FXML
 	private Label lblResultadoDado;
+	
+	@FXML
+    private Label lblMensajeEstado;
 
 	@FXML
 	private StackPane overlayCarta;
@@ -45,7 +48,7 @@ public class ControladorVentanaDePartida implements Initializable {
 	private Button btnCartaGrande;
 
 	private static final double BORDE_LATERAL = 90.0;
-	private static final double MARGEN_SUPERIOR = 35.0;
+	private static final double MARGEN_SUPERIOR = 70.0;
 	private static final double FACTOR_ALTURA_TABLERO = 0.60;
 
 	private MotorDeTurnos motor;
@@ -66,7 +69,7 @@ public class ControladorVentanaDePartida implements Initializable {
 
 		controladorMazosYTurnos = new ControladorMazosYTurnos(btnAbrirMazoPropio, btnAbrirMazoObjetivo,
 				btnAbrirMazoGlobal, btnAbrirMazoMaestro, btnLanzarDado, lblTurnoTexto, lblNombreJugador,
-				lblResultadoDado, overlayCarta, btnCartaGrande);
+				lblResultadoDado, overlayCarta, btnCartaGrande, lblMensajeEstado);
 
 		btnLanzarDado.setOnAction(e -> controladorMazosYTurnos.lanzarDado(motor));
 		btnAbrirMazoPropio.setOnAction(e -> controladorMazosYTurnos.abrirMazo(TipoCarta.PROPIA, motor));

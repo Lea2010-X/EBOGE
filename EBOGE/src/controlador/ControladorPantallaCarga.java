@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -34,6 +36,8 @@ public class ControladorPantallaCarga implements Initializable{
      private static final int PORCENTAJE_CONVERSOR = 100;
      
      private Runnable accionAlTerminar;
+     
+     private static final Logger LOGGER = Logger.getLogger(ControladorPantallaCarga.class.getName());
     
 	 @FXML
 	 private ProgressBar barraCarga;
@@ -106,7 +110,7 @@ public class ControladorPantallaCarga implements Initializable{
 	}
 	
 	public List<String> leerCuriosidades(){
-		List<String> listaCuriosidades = new ArrayList<String>();
+		List<String> listaCuriosidades = new ArrayList<>();
 		
 		try (InputStream archivo = getClass().getResourceAsStream(RUTA_CURIOSIDADES)) {
             
@@ -125,7 +129,7 @@ public class ControladorPantallaCarga implements Initializable{
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error al leer el archivo de curiosidades: " + e.getMessage());
+        	LOGGER.log(Level.SEVERE, "Error al leer el archivo de curiosidades " + e.getMessage(), e);
             return Collections.emptyList();
         }
 		
