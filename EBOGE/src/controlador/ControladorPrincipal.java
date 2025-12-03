@@ -169,30 +169,42 @@ public class ControladorPrincipal {
     }
 
     private void aplicarParchePantallaCompleta(Stage stage) {
-        stage.setResizable(true);
-        
-        if (stage.isShowing()) {
-            stage.setMaximized(false);
-            stage.setMaximized(true);
-        } else {
+    	if (!stage.isMaximized()) {
+            stage.setResizable(true);
             stage.setMaximized(true);
         }
     }
     
     private FXMLLoader inicializarInterfaz(Stage escenario, String rutaEscena, String titulo) throws IOException {
-        if (getClass().getResource(rutaEscena) == null) {
+    	if (getClass().getResource(rutaEscena) == null) {
             throw new IOException("No se encontró el archivo FXML en: " + rutaEscena);
         }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaEscena));
         Parent raiz = loader.load();
 
-        Scene escena = new Scene(raiz);
-		escenario.setTitle(titulo);
-		escenario.setScene(escena);
-		aplicarParchePantallaCompleta(ventanaPrincipal);
-	    escenario.show();
 
-        return loader; 
+        Scene escenaActual = escenario.getScene();
+
+        if (escenaActual == null) {
+
+            escenaActual = new Scene(raiz);
+            escenario.setScene(escenaActual);
+        } else {
+
+            escenaActual.setRoot(raiz);
+        }
+
+        escenario.setTitle(titulo);
+
+
+        aplicarParchePantallaCompleta(escenario);
+        
+
+        if (!escenario.isShowing()) {
+            escenario.show();
+        }
+
+        return loader;
     }
 }
