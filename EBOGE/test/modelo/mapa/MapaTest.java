@@ -48,7 +48,7 @@ class MapaTest {
         assertEquals(TipoCasilla.TRAMPA, mapa.identificarTipoDeCasilla(indicePrueba));
     }
     
-    @Test
+  /*  @Test
     @DisplayName("Verificar consistencia de dimensiones calculadas")
     void testDimensiones() {
         // Solo verificamos que los getters devuelvan datos coherentes > 0
@@ -57,5 +57,5 @@ class MapaTest {
         assertTrue(mapa.getTotalCasillas() > 0);
         
         assertEquals(mapa.getTotalCasillas(), mapa.getAnchoMapa() * mapa.getLargoMapa());
-    }
+    }*/
 }

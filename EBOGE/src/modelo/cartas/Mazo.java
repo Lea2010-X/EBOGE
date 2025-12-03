@@ -19,6 +19,8 @@ public class Mazo {
 	private Deque<Carta> pila;
 	private TipoCarta tipoDeCartasParaMazo;
 	
+	private final Random random = new Random();
+	
 	public Mazo(TipoCarta tipo) {
 		this.tipoDeCartasParaMazo = tipo;
 		this.pila = new ArrayDeque<>();
@@ -36,7 +38,6 @@ public class Mazo {
 	
 	public Carta generarCartaAleatoria() {
 	    TipoCarta tipo=getTipo();
-	    Random random = new Random();
 	    int selector = random.nextInt(2);
 	    
 	    switch (tipo) {

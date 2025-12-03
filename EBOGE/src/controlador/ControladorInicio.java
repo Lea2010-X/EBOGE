@@ -1,5 +1,4 @@
 package controlador;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,9 +11,6 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -41,9 +37,13 @@ public class ControladorInicio  implements Initializable{
     private static final String ICONO_SONIDO_ACTIVO = "\uf028";
     private static final String ICONO_SONIDO_MUTE = "\uf026";
     
-    private static final Logger LOGGER = Logger.getLogger(ControladorInicio.class.getName());
+    private ControladorPrincipal controladorPrincipal;
     
-	
+    public void setControladorPrincipal(ControladorPrincipal controladorPrincipal) {
+        this.controladorPrincipal = controladorPrincipal;
+    }
+    
+     
 	@FXML
 	private Button btnJugar;
 	
@@ -64,6 +64,8 @@ public class ControladorInicio  implements Initializable{
 
 	private MediaPlayer reproductorMusica;
 	
+	private Runnable accionJugar;
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		btnMusica.setText(ICONO_SONIDO_ACTIVO);
@@ -82,10 +84,20 @@ public class ControladorInicio  implements Initializable{
 	    }
 	}
 	
+	public void setOnJugar(Runnable accion) {
+        this.accionJugar = accion;
+    }
 	
-	@FXML
-	public void cargarJuego(ActionEvent event) {		
-	}
+
+	 @FXML
+	    public void cargarJuego(ActionEvent event) {
+	        // CAMBIO 3: Usar la referencia para cambiar de pantalla
+	        if (controladorPrincipal != null) {
+	        	controladorPrincipal.mostrarVentanaDeConfiguracion();
+	        } else {
+	            System.out.println("Error: No se ha vinculado el ControladorPrincipal");
+	        }
+	    }
 	
 	@FXML 
 	public void salirJuego(ActionEvent event) {
@@ -134,7 +146,7 @@ public class ControladorInicio  implements Initializable{
 	        URL url = getClass().getResource(RUTA_CARPETA_MUSICA); 
 
 	        if (url == null) {
-	        	LOGGER.log(Level.SEVERE, "No se encontro la carpeta dentro de la raiz");
+	            System.err.println("No se encontro la carpeta dentro de la raiz");
 	            return;
 	        }
 	        
@@ -157,9 +169,9 @@ public class ControladorInicio  implements Initializable{
             	        
 
 	    } catch (URISyntaxException e) {
-	    	LOGGER.log(Level.SEVERE, "No se encontró la carpeta dentro de la raíz " + e.getMessage(), e);
+            System.err.println("Error de sintaxis en la URI de musica: " + e.getMessage());
         } catch (Exception e) {
-        	LOGGER.log(Level.SEVERE, "Ocurrió un error inesperado al cargar el juego" + e.getMessage(), e);
+            e.printStackTrace();
         }
 	}
 	
@@ -196,7 +208,7 @@ public class ControladorInicio  implements Initializable{
 	        URL urlCancion = getClass().getResource(rutaRecurso);
 
 	        if (urlCancion == null) {
-	        	LOGGER.log(Level.SEVERE, "No se encontró el archivo" + rutaRecurso);
+	            System.err.println("No se encontró el archivo: " + rutaRecurso);
 	            return;
 	        }
 
@@ -209,7 +221,8 @@ public class ControladorInicio  implements Initializable{
 	        reproductorMusica.setMute(estabaMuteado); // Restaurar mute
 	        reproductorMusica.play();
 	    } catch (Exception e) {
-	    	LOGGER.log(Level.SEVERE, "Error al cargar la musica" + nombreArchivo + " " + e.getMessage(), e);
+	        System.err.println("Error al cargar la música: " + nombreArchivo);
+	        e.printStackTrace();
 	    }	    
 	}
 }

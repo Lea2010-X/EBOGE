@@ -88,7 +88,7 @@ public class ControladorVentanaDePartida implements Initializable {
 		Partida partida = motor.getPartida();
 
 		partida.getGestorMovimientos().suscribir(controladorTablero);
-		partida.getMapa().getGestroDeCambios().suscribir(controladorTablero);
+		partida.getMapa().getGestorDeCambios().suscribir(controladorTablero);
 
 		controladorTablero.dibujarTablero(partida.getMapa(), partida.getJugadores());
 		controladorMazosYTurnos.actualizarLabelTurno(partida.getJugadorActual());

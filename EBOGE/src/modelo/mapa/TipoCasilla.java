@@ -4,14 +4,10 @@ import java.util.Random;
 
 public enum TipoCasilla {
 
-	INICIO('I', "/imagenes/CasillaInicio.png", 0),
-	FINAL('F', "/imagenes/CasillaFinal.png", 0),
-	NORMAL('N', "/imagenes/CasillaNormal.png", 50),
-	PROPIA('P', "/imagenes/CasillaPropia.png", 15),
-	BLANCO('B', "/imagenes/CasillaBlanco.png", 10),
-	TRAMPA('T', "/imagenes/CasillaTrampa.png", 10),
-	GLOBAL('G', "/imagenes/CasillaGlobal.png", 10), 
-	MAESTRA('M', "/imagenes/CasillaMaestra.png", 5);
+	INICIO('I', "/imagenes/CasillaInicio.png", 0), FINAL('F', "/imagenes/CasillaFinal.png", 0),
+	NORMAL('N', "/imagenes/CasillaNormal.png", 50), PROPIA('P', "/imagenes/CasillaPropia.png", 15),
+	BLANCO('B', "/imagenes/CasillaBlanco.png", 10), TRAMPA('T', "/imagenes/CasillaTrampa.png", 10),
+	GLOBAL('G', "/imagenes/CasillaGlobal.png", 10), MAESTRA('M', "/imagenes/CasillaMaestra.png", 5);
 
 	private final char letra;
 	private final String rutaImagen;
@@ -56,4 +52,3 @@ public enum TipoCasilla {
 		return NORMAL;
 	}
 }
-
