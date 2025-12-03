@@ -4,78 +4,79 @@ import modelo.CambioCasillaEventManager;
 
 public class Mapa {
 
-	private int anchoMapa; // columnas
-	private int largoMapa; // filas
+    private int anchoMapa;   
+    private int largoMapa;   
 
-	private Casilla[][] casillas;
-	private final CambioCasillaEventManager gestorCambios = new CambioCasillaEventManager();
+    private Casilla[][] casillas;
+    private final CambioCasillaEventManager gestorCambios = new CambioCasillaEventManager();
 
-	// Constructor
-	public Mapa(int anchoMapa, int largoMapa, Casilla[][] casillas) {
-		this.anchoMapa = anchoMapa;
-		this.largoMapa = largoMapa;
-		this.casillas = casillas;
-	}
-
-	public int getTotalCasillas() {
-		return anchoMapa * largoMapa;
-	}
-
-	public int getAnchoMapa() {
-		return anchoMapa;
-	}
-
-	public int getLargoMapa() {
-		return largoMapa;
-	}
-	
-
-	public Casilla[][] getCasillas() {
-		return casillas;
-	}
+    // Constructor
+    public Mapa(int anchoMapa, int largoMapa, Casilla[][] casillas) {
+        this.anchoMapa = anchoMapa;
+        this.largoMapa = largoMapa;
+        this.casillas = casillas;
+    }
 
 
-	public CambioCasillaEventManager getGestorDeCambios() {
-		return gestorCambios;
-	}
+    public int getTotalCasillas() {
+        return anchoMapa * largoMapa;
+    }
 
-	public TipoCasilla identificarTipoDeCasilla(int numeroCasilla) {
+    public int getAnchoMapa() {
+        return anchoMapa;
+    }
 
-		Casilla casilla = buscarCasillaPorIndice(numeroCasilla);
-		return (casilla != null) ? casilla.getTipo() : null;
-	}
+    public int getLargoMapa() {
+        return largoMapa;
+    }
 
-	public void modificarTipoDeCasilla(int numeroCasilla, TipoCasilla nuevoTipo) {
+    public Casilla[][] getCasillas() {
+        return casillas;
+    }
 
-		if (nuevoTipo == null) {
-			return;
-		}
+    public CambioCasillaEventManager getGestorDeCambios() {
+        return gestorCambios;
+    }
 
-		Casilla casilla = buscarCasillaPorIndice(numeroCasilla);
-		if (casilla != null) {
-			TipoCasilla anterior = casilla.getTipo();
-			casilla.setTipo(nuevoTipo);
+    public TipoCasilla identificarTipoDeCasilla(int numeroCasilla) {
 
-			// Notificamos el cambio
-			gestorCambios.notificar(casilla.getIndice(), anterior, nuevoTipo);
-		}
-	}
+        Casilla casilla = buscarCasillaPorIndice(numeroCasilla);
+        return (casilla != null) ? casilla.getTipo() : null;
+    }
 
-	private Casilla buscarCasillaPorIndice(int numeroCasilla) {
+    public void modificarTipoDeCasilla(int numeroCasilla, TipoCasilla nuevoTipo) {
 
-		if (numeroCasilla < 0 || numeroCasilla >= getTotalCasillas()) {
-			return null;
-		}
+        if (nuevoTipo == null) {
+            return;
+        }
 
-		for (int fila = 0; fila < largoMapa; fila++) {
-			for (int columna = 0; columna < anchoMapa; columna++) {
-				Casilla casilla = casillas[fila][columna];
-				if (casilla != null && casilla.getIndice() == numeroCasilla) {
-					return casilla;
-				}
-			}
-		}
+        Casilla casilla = buscarCasillaPorIndice(numeroCasilla);
+        if (casilla != null) {
+            TipoCasilla anterior = casilla.getTipo();
+            casilla.setTipo(nuevoTipo);
 
-		return null;
-	}
+
+            gestorCambios.notificar(casilla.getIndice(), anterior, nuevoTipo);
+        }
+    }
+
+
+
+    private Casilla buscarCasillaPorIndice(int numeroCasilla) {
+
+        if (numeroCasilla < 0 || numeroCasilla >= getTotalCasillas()) {
+            return null;
+        }
+
+        for (int fila = 0; fila < largoMapa; fila++) {
+            for (int columna = 0; columna < anchoMapa; columna++) {
+                Casilla casilla = casillas[fila][columna];
+                if (casilla != null && casilla.getIndice() == numeroCasilla) {
+                    return casilla;
+                }
+            }
+        }
+
+        return null;
+    }
 }
