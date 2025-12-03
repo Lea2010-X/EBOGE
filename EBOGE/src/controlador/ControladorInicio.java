@@ -11,6 +11,8 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -37,6 +39,7 @@ public class ControladorInicio  implements Initializable{
     private static final String ICONO_SONIDO_ACTIVO = "\uf028";
     private static final String ICONO_SONIDO_MUTE = "\uf026";
     
+    private static final Logger LOGGER = Logger.getLogger(ControladorInicio.class.getName());
     private ControladorPrincipal controladorPrincipal;
     
     public void setControladorPrincipal(ControladorPrincipal controladorPrincipal) {
@@ -95,7 +98,7 @@ public class ControladorInicio  implements Initializable{
 	        if (controladorPrincipal != null) {
 	        	controladorPrincipal.mostrarVentanaDeConfiguracion();
 	        } else {
-	            System.out.println("Error: No se ha vinculado el ControladorPrincipal");
+	        	LOGGER.log(Level.WARNING, "No se ha conectado el controlador principal ");
 	        }
 	    }
 	
@@ -169,9 +172,9 @@ public class ControladorInicio  implements Initializable{
             	        
 
 	    } catch (URISyntaxException e) {
-            System.err.println("Error de sintaxis en la URI de musica: " + e.getMessage());
+	    	LOGGER.log(Level.SEVERE, "Error de sintaxis en la URI de la musica " + e.getMessage(), e);
         } catch (Exception e) {
-            e.printStackTrace();
+        	LOGGER.log(Level.SEVERE, "Error al leer el archivo de la musica " + e.getMessage(), e);
         }
 	}
 	
@@ -221,8 +224,7 @@ public class ControladorInicio  implements Initializable{
 	        reproductorMusica.setMute(estabaMuteado); // Restaurar mute
 	        reproductorMusica.play();
 	    } catch (Exception e) {
-	        System.err.println("Error al cargar la música: " + nombreArchivo);
-	        e.printStackTrace();
+	        LOGGER.log(Level.SEVERE, "Error al cargar la música " + nombreArchivo + e.getMessage(), e);
 	    }	    
 	}
 }

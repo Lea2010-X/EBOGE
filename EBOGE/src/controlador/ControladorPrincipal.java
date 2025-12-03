@@ -38,7 +38,7 @@ public class ControladorPrincipal {
     private Stage ventanaPrincipal;
     private Partida partida;
 
-    
+    private static final Logger LOGGER = Logger.getLogger(ControladorPrincipal.class.getName());
     private List<Jugador> jugadoresPartida;
     private int carasDadoPartida;
 
@@ -64,8 +64,7 @@ public class ControladorPrincipal {
             // Nota: La navegación a configuración se hace desde el FXML de Inicio
 
         } catch (Exception e) {
-            System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
-            e.printStackTrace();
+        	LOGGER.log(Level.SEVERE, "Error crítico al iniciar la aplicación: " + e.getMessage(), e);
         }
     }
 
@@ -77,8 +76,7 @@ public class ControladorPrincipal {
             configController.setControladorPrincipal(this); 
             
         } catch (Exception e) {
-            System.err.println("Error al cargar la configuración: " + e.getMessage());
-            e.printStackTrace();
+        	LOGGER.log(Level.SEVERE, "Error crítico al cargar la configuracion: " + e.getMessage(), e);
         }
     }
 
@@ -102,8 +100,7 @@ public class ControladorPrincipal {
             });
 
         } catch (Exception e) {
-            System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
-            e.printStackTrace();
+        	LOGGER.log(Level.SEVERE, "Error crítico al iniciar la aplicación: " + e.getMessage(), e);
         }
     }
 
@@ -131,8 +128,7 @@ public class ControladorPrincipal {
             });
 
         } catch (Exception e) {
-            System.err.println("Error al iniciar la aplicación: " + e.getMessage());
-            e.printStackTrace();
+        	LOGGER.log(Level.SEVERE, "Error crítico al iniciar la aplicación: " + e.getMessage(), e);
         }
     }
 
@@ -161,10 +157,10 @@ public class ControladorPrincipal {
             if (fontStream != null) {
                 Font.loadFont(fontStream, TAMANIO_FUENTE_BASE);
             } else {
-                System.err.println("Advertencia: No se pudo encontrar la fuente en " + rutaRecurso);
+            	LOGGER.log(Level.SEVERE, "No se pudo conectar a la fuente en: " + rutaRecurso);
             }
         } catch (IOException e) {
-            System.err.println("Error al leer el flujo de la fuente: " + rutaRecurso);
+        	LOGGER.log(Level.SEVERE, "Error al intentar leer la fuente" + e.getMessage(), e);
         }
     }
 
