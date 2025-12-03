@@ -4,102 +4,115 @@ import java.io.FileWriter;
 
 public class GeneradorDeMapa {
 
-	private static final int RONDAS_ESPERADAS = 10;
+    private static final int RONDAS_ESPERADAS = 10;
 
-	private int anchoPanel; // W (px)
-	private int altoPanel; // H (px)
+    private int anchoPanel;       // W
+    private int altoPanel;        // H
 
-	private int cantidadFilas; // m
-	private int cantidadColumnas; // n
+    private int cantidadFilas;    // m
+    private int cantidadColumnas; // n
 
-	private int ladosDelDado; // L
+    private int ladosDelDado;     // L
 
-	private int anchoCasillaEstimado; // wc aproximado
-	private int altoCasillaEstimado; // hc aproximado
 
-	private Casilla[][] casillas;
+    private int anchoCasillaEstimado;  // wc aproximado
+    private int altoCasillaEstimado;   // hc aproximado
 
-	public Mapa generarMapa(int anchoPanel, int altoPanel, int ladosDelDado) {
+    private Casilla[][] casillas;
 
-		this.anchoPanel = anchoPanel;
-		this.altoPanel = altoPanel;
-		this.ladosDelDado = ladosDelDado;
+    public Mapa generarMapa(int anchoPanel, int altoPanel, int ladosDelDado) {
 
-		calcularDimensionesLogicas();
+        this.anchoPanel = anchoPanel;
+        this.altoPanel = altoPanel;
+        this.ladosDelDado = ladosDelDado;
 
-		casillas = new Casilla[cantidadFilas][cantidadColumnas];
+        calcularDimensionesLogicas();
 
-		recorrerEspiralYCrearCasillas();
+        casillas = new Casilla[cantidadFilas][cantidadColumnas];
 
-		return new Mapa(cantidadColumnas, cantidadFilas, casillas);
-	}
+        recorrerEspiralYCrearCasillas();
 
-	private void calcularDimensionesLogicas() {
+        return new Mapa(cantidadColumnas, cantidadFilas, casillas);
+    }
 
-		double esperanzaDelDado = (ladosDelDado + 1) / 2.0;
-		double casillasTeoricas = RONDAS_ESPERADAS * esperanzaDelDado;
-		int cantidadCasillas = (int) Math.round(casillasTeoricas);
+    private void calcularDimensionesLogicas() {
 
-		double filasAproximadas = Math.sqrt((cantidadCasillas * (double) altoPanel) / (double) anchoPanel);
-		int filas = Math.max(1, (int) Math.round(filasAproximadas));
+        double esperanzaDelDado = (ladosDelDado + 1) / 2.0;
+        double casillasTeoricas = RONDAS_ESPERADAS * esperanzaDelDado;
+        int cantidadCasillas = (int) Math.round(casillasTeoricas);
 
-		int columnas = (int) Math.ceil(cantidadCasillas / (double) filas);
+        double filasAproximadas =
+                Math.sqrt((cantidadCasillas * (double) altoPanel) / (double) anchoPanel);
+        int filas = Math.max(1, (int) Math.round(filasAproximadas));
 
-		cantidadFilas = filas;
-		cantidadColumnas = columnas;
+        int columnas = (int) Math.ceil(cantidadCasillas / (double) filas);
 
-		anchoCasillaEstimado = anchoPanel / cantidadColumnas;
-		altoCasillaEstimado = altoPanel / cantidadFilas;
-	}
+        cantidadFilas = filas;
+        cantidadColumnas = columnas;
 
-	private void recorrerEspiralYCrearCasillas() {
+        anchoCasillaEstimado = anchoPanel / cantidadColumnas;
+        altoCasillaEstimado = altoPanel / cantidadFilas;
+    }
 
-		int limiteSuperior = 0;
-		int limiteInferior = cantidadFilas - 1;
-		int limiteIzquierdo = 0;
-		int limiteDerecho = cantidadColumnas - 1;
-		int indiceActual = 0;
-		int totalCasillas = cantidadFilas * cantidadColumnas;
+    public int getAnchoCasillaEstimado() {
+        return anchoCasillaEstimado;
+    }
 
-		while (limiteSuperior <= limiteInferior && limiteIzquierdo <= limiteDerecho && indiceActual < totalCasillas) {
+    public int getAltoCasillaEstimado() {
+        return altoCasillaEstimado;
+    }
 
-			// Bajar por columna izquierda
-			for (int fila = limiteSuperior; fila <= limiteInferior && indiceActual < totalCasillas; fila++) {
-				crearCasillaEnPosicion(fila, limiteIzquierdo, indiceActual++, totalCasillas);
-			}
-			limiteIzquierdo++;
 
-			// Ir a la derecha por fila inferior
-			for (int columna = limiteIzquierdo; columna <= limiteDerecho && indiceActual < totalCasillas; columna++) {
-				crearCasillaEnPosicion(limiteInferior, columna, indiceActual++, totalCasillas);
-			}
-			limiteInferior--;
+    private void recorrerEspiralYCrearCasillas() {
 
-			// Subir por columna derecha
-			for (int fila = limiteInferior; fila >= limiteSuperior && indiceActual < totalCasillas; fila--) {
-				crearCasillaEnPosicion(fila, limiteDerecho, indiceActual++, totalCasillas);
-			}
-			limiteDerecho--;
+        int limiteSuperior = 0;
+        int limiteInferior = cantidadFilas - 1;
+        int limiteIzquierdo = 0;
+        int limiteDerecho = cantidadColumnas - 1;
+        int indiceActual = 0;
+        int totalCasillas = cantidadFilas * cantidadColumnas;
 
-			// Ir a la izquierda por fila superior
-			for (int columna = limiteDerecho; columna >= limiteIzquierdo && indiceActual < totalCasillas; columna--) {
-				crearCasillaEnPosicion(limiteSuperior, columna, indiceActual++, totalCasillas);
-			}
-			limiteSuperior++;
-		}
-	}
+        while (limiteSuperior <= limiteInferior
+                && limiteIzquierdo <= limiteDerecho
+                && indiceActual < totalCasillas) {
 
-	private void crearCasillaEnPosicion(int fila, int columna, int indiceCasilla, int totalCasillas) {
-		TipoCasilla tipo;
+            // Bajar por columna izquierda
+            for (int fila = limiteSuperior; fila <= limiteInferior && indiceActual < totalCasillas; fila++) {
+                crearCasillaEnPosicion(fila, limiteIzquierdo, indiceActual++, totalCasillas);
+            }
+            limiteIzquierdo++;
 
-		if (indiceCasilla == 0) {
-			tipo = TipoCasilla.INICIO;
-		} else if (indiceCasilla == totalCasillas - 1) {
-			tipo = TipoCasilla.FINAL;
-		} else {
-			tipo = TipoCasilla.aleatorio();
-		}
+            // Ir a la derecha por fila inferior
+            for (int columna = limiteIzquierdo; columna <= limiteDerecho && indiceActual < totalCasillas; columna++) {
+                crearCasillaEnPosicion(limiteInferior, columna, indiceActual++, totalCasillas);
+            }
+            limiteInferior--;
 
-		casillas[fila][columna] = new Casilla(tipo, indiceCasilla);
-	}
+            // Subir por columna derecha
+            for (int fila = limiteInferior; fila >= limiteSuperior && indiceActual < totalCasillas; fila--) {
+                crearCasillaEnPosicion(fila, limiteDerecho, indiceActual++, totalCasillas);
+            }
+            limiteDerecho--;
+
+            // Ir a la izquierda por fila superior
+            for (int columna = limiteDerecho; columna >= limiteIzquierdo && indiceActual < totalCasillas; columna--) {
+                crearCasillaEnPosicion(limiteSuperior, columna, indiceActual++, totalCasillas);
+            }
+            limiteSuperior++;
+        }
+    }
+
+    private void crearCasillaEnPosicion(int fila, int columna, int indiceCasilla, int totalCasillas) {
+        TipoCasilla tipo;
+
+        if (indiceCasilla == 0) {
+            tipo = TipoCasilla.INICIO;
+        } else if (indiceCasilla == totalCasillas - 1) {
+            tipo = TipoCasilla.FINAL;
+        } else {
+            tipo = TipoCasilla.aleatorio();
+        }
+
+        casillas[fila][columna] = new Casilla(tipo, indiceCasilla);
+    }
 }

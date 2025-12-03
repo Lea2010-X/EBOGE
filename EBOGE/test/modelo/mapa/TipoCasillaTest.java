@@ -8,7 +8,7 @@ import modelo.mapa.TipoCasilla;
 
 public class TipoCasillaTest {
 
-	@RepeatedTest(10)
+	@RepeatedTest(20)
 	void casillaAleatoriaDebeSerValida() {
 		TipoCasilla tipo = TipoCasilla.aleatorio();
 

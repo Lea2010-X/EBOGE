@@ -31,7 +31,7 @@ class MapaTest {
     void testIdentificarIndiceInvalido() {
         int total = mapa.getTotalCasillas();
         
-        // Probamos el índice siguiente al último (Out of bounds)
+
         assertNull(mapa.identificarTipoDeCasilla(total), "Debería ser null porque el índice excede el tamaño");
         
         assertNull(mapa.identificarTipoDeCasilla(-1));
@@ -48,14 +48,5 @@ class MapaTest {
         assertEquals(TipoCasilla.TRAMPA, mapa.identificarTipoDeCasilla(indicePrueba));
     }
     
-  /*  @Test
-    @DisplayName("Verificar consistencia de dimensiones calculadas")
-    void testDimensiones() {
-        // Solo verificamos que los getters devuelvan datos coherentes > 0
-        assertTrue(mapa.getAnchoCasilla() > 0);
-        assertTrue(mapa.getLargoCasilla() > 0);
-        assertTrue(mapa.getTotalCasillas() > 0);
-        
-        assertEquals(mapa.getTotalCasillas(), mapa.getAnchoMapa() * mapa.getLargoMapa());
-    }*/
+
 }

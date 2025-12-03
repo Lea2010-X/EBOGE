@@ -1,125 +1,68 @@
 package modelo.jugador;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import modelo.jugador.ColorJugador;
-import modelo.jugador.EfectoStun;
-import modelo.jugador.EstadoJugador;
-import modelo.jugador.Jugador;
+import static org.junit.jupiter.api.Assertions.*;
 
-
-@DisplayName("Pruebas de la Clase EfectoStun")
+@DisplayName("Pruebas Unitarias: Efecto Stun")
 class EfectoStunTest {
 
-    
-    private Jugador jugadorContexto;
-    private EfectoStun efectoStun;
+    private Jugador jugador;
 
     @BeforeEach
     void setUp() {
-        jugadorContexto = new Jugador("Stub", ColorJugador.BLANCO);
+        jugador = new Jugador("TestPlayer", ColorJugador.BLANCO);
     }
 
-    @Nested
-    @DisplayName("Constructor (Validación RF-14)")
-    class ConstructorRF14 {
+    @Test
+    @DisplayName("Constructor debe limitar los turnos entre 1 y 3")
+    void testLimitesTurnos() {
+        // Caso < 1
+        EfectoStun stunCorto = new EfectoStun(-5);
+        stunCorto.actualizarEfectoPorTurno(jugador);
+        assertTrue(stunCorto.haExpirado(), "Debe durar al menos 1 turno (se reduce y expira)");
 
-        @Test
-        @DisplayName("Debe crearse con 3 turnos si se piden 3")
-        void testConstructorTurnosNormales() {
-            // Arrange & Act
-            efectoStun = new EfectoStun(3);
-            
-            // Assert
-            assertFalse(efectoStun.haExpirado(), "No debe estar expirado al crearse");
-        }
-
-        @Test
-        @DisplayName("Debe limitar los turnos a 3 (Max RF-14) si se piden más")
-        void testConstructorTurnosMaximo() {
-            // Arrange
-            efectoStun = new EfectoStun(10); // Se piden 10 (inválido)
-
-            // Act
-            efectoStun.actualizarEfectoPorTurno(jugadorContexto); // Pasa 1 turno
-            efectoStun.actualizarEfectoPorTurno(jugadorContexto); // Pasa 2 turnos
-            efectoStun.actualizarEfectoPorTurno(jugadorContexto); // Pasa 3 turnos
-
-            // Assert
-            assertTrue(efectoStun.haExpirado(), "Debe expirar al 3er turno, no al 10mo");
-        }
-
-        @Test
-        @DisplayName("Debe limitar los turnos a 1 (Min RF-14) si se pide 0 o menos")
-        void testConstructorTurnosMinimo() {
-            // Arrange
-            efectoStun = new EfectoStun(0); // Se piden 0 (inválido)
-
-            // Act
-            assertFalse(efectoStun.haExpirado(), "No debe estar expirado al crearse");
-            efectoStun.actualizarEfectoPorTurno(jugadorContexto); // Pasa 1 turno
-
-            // Assert
-            assertTrue(efectoStun.haExpirado(), "Debe expirar al 1er turno");
-        }
+        // Caso > 3
+        EfectoStun stunLargo = new EfectoStun(10);
+        // Simulamos 3 turnos
+        stunLargo.actualizarEfectoPorTurno(jugador);
+        stunLargo.actualizarEfectoPorTurno(jugador);
+        stunLargo.actualizarEfectoPorTurno(jugador);
+        assertTrue(stunLargo.haExpirado(), "Debe durar máximo 3 turnos");
     }
 
-    @Nested
-    @DisplayName("Ciclo de Vida del Efecto")
-    class CicloDeVida {
+    @Test
+    @DisplayName("removerEfecto no debe cambiar estado si hay otro Stun activo")
+    void testMultiplesStuns() {
+        // Arrange
+        EfectoStun stun1 = new EfectoStun(1);
+        EfectoStun stun2 = new EfectoStun(2);
 
-        @Test
-        @DisplayName("aplicarEfectoInicial debe cambiar el estado a INMOVILIZADO")
-        void testAplicarEfectoInicial() {
-            // Arrange
-            efectoStun = new EfectoStun(2);
-            jugadorContexto.setEstado(EstadoJugador.NORMAL); // Estado inicial
+        jugador.aplicarEfecto(stun1);
+        jugador.aplicarEfecto(stun2); 
 
-            // Act
-            efectoStun.aplicarEfectoInicial(jugadorContexto);
+        // Act: Actualizar (stun1 expira)
+        jugador.actualizarEfectos();
 
-            // Assert
-            assertEquals(EstadoJugador.INMOVILIZADO, jugadorContexto.getEstado());
-        }
-
-        @Test
-        @DisplayName("actualizarEfectoPorTurno debe reducir turnos y expirar")
-        void testActualizarTurnosYExpirar() {
-            // Arrange
-            efectoStun = new EfectoStun(2); // 2 turnos
-
-            // Act 1
-            efectoStun.actualizarEfectoPorTurno(jugadorContexto);
-            
-            // Assert 1
-            assertFalse(efectoStun.haExpirado(), "No debe expirar en el turno 1");
-
-            // Act 2
-            efectoStun.actualizarEfectoPorTurno(jugadorContexto);
-
-            // Assert 2
-            assertTrue(efectoStun.haExpirado(), "Debe expirar en el turno 2");
-        }
-
-        @Test
-        @DisplayName("removerEfecto debe cambiar estado a NORMAL")
-        void testRemoverEfecto() {
-            // Arrange
-            efectoStun = new EfectoStun(1);
-            jugadorContexto.setEstado(EstadoJugador.INMOVILIZADO); // Estado inicial
-
-            // Act
-            efectoStun.removerEfecto(jugadorContexto);
-
-            // Assert
-            assertEquals(EstadoJugador.NORMAL, jugadorContexto.getEstado());
-        }
+        // Assert
+        assertEquals(1, jugador.getEfectosActivos().size(), "Debe quedar 1 efecto");
+        assertEquals(EstadoJugador.INMOVILIZADO, jugador.getEstado(), "El jugador debe seguir inmovilizado por el segundo efecto");
+        assertTrue(jugador.estaInmovilizado());
+    }
+    
+    @Test
+    @DisplayName("removerEfecto debe restaurar a NORMAL si es el último Stun")
+    void testUltimoStun() {
+        // Arrange
+        EfectoStun stun = new EfectoStun(1);
+        jugador.aplicarEfecto(stun);
+        
+        // Act
+        jugador.actualizarEfectos();
+        
+        // Assert
+        assertEquals(EstadoJugador.NORMAL, jugador.getEstado());
     }
 }
