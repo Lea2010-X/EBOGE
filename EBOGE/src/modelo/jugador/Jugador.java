@@ -16,6 +16,7 @@ public class Jugador {
     private boolean requiereActivacion;
     private EstadoJugador estado;
     private final List<EfectoJugador> efectosActivos;
+    private int turnosEfecto; 
 
     public Jugador(String nombre, ColorJugador color) {
 
@@ -29,6 +30,7 @@ public class Jugador {
         this.estado = EstadoJugador.NORMAL;
         this.efectosActivos = new ArrayList<>();
         this.ultimoMovimiento = 0;
+        this.turnosEfecto = 0;
     }
 
 
@@ -109,6 +111,14 @@ public class Jugador {
 
     public void setPosicion(int posicion) {
         this.posicion = posicion;
+    }
+
+    public int getTurnosEfecto() {
+        return turnosEfecto;
+    }
+    
+    public void setTurnosEfecto(int duracion) {
+        this.turnosEfecto = duracion;
     }
 
     public int getUltimoMovimiento() {

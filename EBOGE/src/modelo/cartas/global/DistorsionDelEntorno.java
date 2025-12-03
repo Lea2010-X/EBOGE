@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
+import controlador.ControladorPrincipal;
 import modelo.Partida;
 import modelo.cartas.Carta;
 import modelo.cartas.EfectoSinObjetivo;
@@ -16,6 +18,7 @@ import modelo.mapa.TipoCasilla;
 public class DistorsionDelEntorno extends Carta implements EfectoSinObjetivo {
 	
     private Random random = new Random();
+    
 
     public DistorsionDelEntorno() {
         super("Distorsion del entorno", TipoCarta.GLOBAL, "/imagenes/Cartas/DistorcionDelEntorno.png");
@@ -36,7 +39,7 @@ public class DistorsionDelEntorno extends Carta implements EfectoSinObjetivo {
             }
         }
 
-        if (casillasNormales.isEmpty()) {
+        if (casillasNormales.isEmpty()) {       	
             System.out.println("No hay casillas normales para reubicar. No pasa nada.");
             return;
         }

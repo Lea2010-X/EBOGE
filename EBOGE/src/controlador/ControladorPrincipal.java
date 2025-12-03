@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +33,8 @@ public class ControladorPrincipal {
 	private static final String TITULO_VENTANA_PRINCIPAL = "EBOGE - Epic Board Game Evolution";
 
 	private static final double TAMANIO_FUENTE_BASE = 10.0;
+	
+	private static final Logger LOGGER = Logger.getLogger(ControladorPrincipal.class.getName());
 
 	private Stage ventanaPrincipal;
 	private Partida partida;
@@ -56,14 +60,12 @@ public class ControladorPrincipal {
 		try {
 			cargarFuentesGlobales();
 			inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_INICIO, TITULO_VENTANA_PRINCIPAL);
-		} catch (Exception e) {
-			System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
-			e.printStackTrace();
+		} catch (Exception e) {			
+			LOGGER.log(Level.SEVERE, "Error critico al iniciar la aplicacion " + e.getMessage(), e); 
 		}
 	}
 
 	public void mostrarVentanaDeConfiguracion() {
-		// pendiente
 	}
 
 	public void mostrarVentanaDeCarga() {
@@ -73,9 +75,7 @@ public class ControladorPrincipal {
 
 			ControladorPantallaCarga cargaController = loader.getController();
 
-			cargaController.setOnCargaTerminada(() -> {
-				mostrarVentanaDePartida();
-			});
+			cargaController.setOnCargaTerminada(this::mostrarVentanaDePartida);
 
 			Scene escena = new Scene(raiz);
 
@@ -86,8 +86,7 @@ public class ControladorPrincipal {
 			ventanaPrincipal.show();
 
 		} catch (Exception e) {
-			System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Error critico al iniciar la ventana de carga" + e.getMessage(),e);
 		}
 	}
 
@@ -113,8 +112,7 @@ public class ControladorPrincipal {
 			});
 
 		} catch (Exception e) {
-			System.err.println("Error al iniciar la aplicación: " + e.getMessage());
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Error critico al iniciar la ventana de partida " + e.getMessage(), e); 
 		}
 	}
 
@@ -152,10 +150,10 @@ public class ControladorPrincipal {
 			if (fontStream != null) {
 				Font.loadFont(fontStream, TAMANIO_FUENTE_BASE);
 			} else {
-				System.err.println("Advertencia: No se pudo encontrar la fuente en " + rutaRecurso);
+				LOGGER.log(Level.SEVERE, "No se pudo encontrar la fuente en " + rutaRecurso);
 			}
 		} catch (IOException e) {
-			System.err.println("Error al leer el flujo de la fuente: " + rutaRecurso);
+			LOGGER.log(Level.SEVERE, "Error al leer la fuente " + e.getMessage(), e);
 		}
 	}
 

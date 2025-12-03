@@ -16,7 +16,14 @@
     fx:controller="controlador.ControladorVentanaDePartida">
 
     <children>
-
+		<Label fx:id="lblMensajeEstado"
+               text="¡La partida ha comenzado!"
+               alignment="CENTER"
+               mouseTransparent="true"
+               AnchorPane.topAnchor="10.0"
+               AnchorPane.leftAnchor="100.0"
+               AnchorPane.rightAnchor="100.0" />
+               
         <!-- TABLERO -->
         <GridPane fx:id="gridTablero" />
 

@@ -13,6 +13,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -37,6 +40,8 @@ public class ControladorInicio  implements Initializable{
     
     private static final String ICONO_SONIDO_ACTIVO = "\uf028";
     private static final String ICONO_SONIDO_MUTE = "\uf026";
+    
+    private static final Logger LOGGER = Logger.getLogger(ControladorInicio.class.getName());
     
 	
 	@FXML
@@ -79,17 +84,7 @@ public class ControladorInicio  implements Initializable{
 	
 	
 	@FXML
-	public void cargarJuego(ActionEvent event) {
-		/*try {
-	        Parent root = FXMLLoader.load(getClass().getResource("configuracionAnimacion.fxml"));
-	        Stage stage = (Stage) btnJugar.getScene().getWindow();
-
-	        stage.setScene(new Scene(root));
-	        stage.show();
-
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } */
+	public void cargarJuego(ActionEvent event) {		
 	}
 	
 	@FXML 
@@ -139,7 +134,7 @@ public class ControladorInicio  implements Initializable{
 	        URL url = getClass().getResource(RUTA_CARPETA_MUSICA); 
 
 	        if (url == null) {
-	            System.err.println("No se encontro la carpeta dentro de la raiz");
+	        	LOGGER.log(Level.SEVERE, "No se encontro la carpeta dentro de la raiz");
 	            return;
 	        }
 	        
@@ -162,9 +157,9 @@ public class ControladorInicio  implements Initializable{
             	        
 
 	    } catch (URISyntaxException e) {
-            System.err.println("Error de sintaxis en la URI de musica: " + e.getMessage());
+	    	LOGGER.log(Level.SEVERE, "No se encontró la carpeta dentro de la raíz " + e.getMessage(), e);
         } catch (Exception e) {
-            e.printStackTrace();
+        	LOGGER.log(Level.SEVERE, "Ocurrió un error inesperado al cargar el juego" + e.getMessage(), e);
         }
 	}
 	
@@ -201,7 +196,7 @@ public class ControladorInicio  implements Initializable{
 	        URL urlCancion = getClass().getResource(rutaRecurso);
 
 	        if (urlCancion == null) {
-	            System.err.println("No se encontró el archivo: " + rutaRecurso);
+	        	LOGGER.log(Level.SEVERE, "No se encontró el archivo" + rutaRecurso);
 	            return;
 	        }
 
@@ -214,8 +209,7 @@ public class ControladorInicio  implements Initializable{
 	        reproductorMusica.setMute(estabaMuteado); // Restaurar mute
 	        reproductorMusica.play();
 	    } catch (Exception e) {
-	        System.err.println("Error al cargar la música: " + nombreArchivo);
-	        e.printStackTrace();
+	    	LOGGER.log(Level.SEVERE, "Error al cargar la musica" + nombreArchivo + " " + e.getMessage(), e);
 	    }	    
 	}
 }
