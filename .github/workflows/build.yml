@@ -1,19 +1,52 @@
 name: Build
+
 on:
   push:
     branches:
-      - main
+      - '**'
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
   sonarqube:
-    name: SonarQube
+    name: SonarCloud
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarQube Scan
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # 🔹 Compilar SOLO las clases que no usan JavaFX (modelo)
+      - name: Compile Java sources (modelo)
+        shell: pwsh
+        run: |
+          Write-Host "Creando carpeta 'build'..."
+          New-Item -ItemType Directory -Force -Path build | Out-Null
+
+          Write-Host "Buscando archivos .java en EBOGE/src/modelo..."
+          $sources = Get-ChildItem -Recurse -Filter *.java EBOGE/src/modelo | ForEach-Object { $_.FullName }
+
+          if (-not $sources -or $sources.Count -eq 0) {
+            Write-Host "No se encontraron archivos .java en EBOGE/src/modelo"
+            exit 1
+          }
+
+          Write-Host "Compilando archivos de modelo a carpeta 'build'..."
+          javac -d build $sources
+
+          Write-Host "Contenido de 'build':"
+          Get-ChildItem -Recurse build
+
+      - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
