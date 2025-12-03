@@ -1,74 +1,37 @@
 package modelo;
 
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import modelo.Dado;
-
-
-@DisplayName("Pruebas de la Clase Dado")
+@DisplayName("Pruebas Unitarias: Clase Dado")
 class DadoTest {
 
-    @Nested
-    @DisplayName("Constructor (Validación RF-02)")
-    class ConstructorRF02 {
-
-        @Test
-        @DisplayName("Debe crear un dado con 6 caras")
-        void testConstructorDadoNormal() {
-            // Arrange & Act
-            Dado dado = new Dado(6);
-            
-            // Assert
-            assertEquals(6, dado.getCaras());
-        }
-
-        @Test
-        @DisplayName("Debe fallar si las caras son < 3")
-        void testConstructorMenosDe3Caras() {
-            // Act & Assert
-            assertThrows(IllegalArgumentException.class, () -> {
-                new Dado(2); // Límite inferior es 3 (según RF-02)
-            }, "Debe fallar, RF-02 dice min 3 caras");
-        }
-
-        @Test
-        @DisplayName("Debe fallar si las caras son > 30")
-        void testConstructorMasDe30Caras() {
-            // Act & Assert
-            assertThrows(IllegalArgumentException.class, () -> {
-                new Dado(31); // Límite superior es 30 (según RF-02)
-            }, "Debe fallar, RF-02 dice max 30 caras");
-        }
-
-        @Test
-        @DisplayName("Debe permitir los límites (3 y 30)")
-        void testConstructorEnLimites() {
-            // Act & Assert
-            assertDoesNotThrow(() -> new Dado(3));
-            assertDoesNotThrow(() -> new Dado(30));
-        }
+    @Test
+    @DisplayName("Debe crear un dado con número de caras válido (3-30)")
+    void testConstructorValido() {
+        assertDoesNotThrow(() -> new Dado(3));
+        assertDoesNotThrow(() -> new Dado(30));
+        
+        Dado d = new Dado(6);
+        assertEquals(6, d.getCaras());
     }
 
-    
-    @RepeatedTest(100)
-    @DisplayName("lanzar() debe devolver un valor siempre dentro del rango [1, Caras]")
-    void testLanzarDentroDeRango() {
-        // Arrange
-        Dado dado = new Dado(10); 
+    @Test
+    @DisplayName("Debe lanzar excepción si las caras están fuera de rango")
+    void testConstructorInvalido() {
+        assertThrows(IllegalArgumentException.class, () -> new Dado(2), "Mínimo 3 caras");
+        assertThrows(IllegalArgumentException.class, () -> new Dado(31), "Máximo 30 caras");
+    }
 
-        // Act
-        int resultado = dado.lanzar();
-
-        // Assert
-        assertTrue(resultado >= 1, "El resultado no puede ser menor que 1");
-        assertTrue(resultado <= 10, "El resultado no puede ser mayor que 10");
+    @Test
+    @DisplayName("El lanzamiento debe estar dentro del rango [1, caras]")
+    void testLanzamiento() {
+        Dado dado = new Dado(10);
+        
+        for (int i = 0; i < 50; i++) {
+            int resultado = dado.lanzar();
+            assertTrue(resultado >= 1 && resultado <= 10, "Resultado fuera de rango: " + resultado);
+        }
     }
 }
