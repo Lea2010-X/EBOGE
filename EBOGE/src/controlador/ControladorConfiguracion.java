@@ -106,7 +106,7 @@ public class ControladorConfiguracion implements Initializable {
         colorBox.setPrefSize(20, 20);
         
         
-        String hexColor = obtenerHexColor(jugador.getColor());
+        String hexColor = jugador.getColor();
         
         
         colorBox.setStyle("-fx-background-color: " + hexColor + "; -fx-border-color: black; -fx-border-width: 2;");
@@ -117,19 +117,7 @@ public class ControladorConfiguracion implements Initializable {
     }
 
     
-    private String obtenerHexColor(ColorJugador color) {
-        switch (color) {
-            case ROJO: return "#D32F2F";
-            case AZUL: return "#1976D2";
-            case VERDE: return "#388E3C";
-            case AMARILLO: return "#FBC02D";
-            case NEGRO: return "#000000";
-            case BLANCO: return "#FFFFFF";
-            case ROSA: return "#E91E63";
-            case NARANJA: return "#F57C00";
-            default: return "#808080"; 
-        }
-    }
+
 
     private boolean validarEntrada(String nombre, ColorJugador color) {
         
