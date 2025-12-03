@@ -20,162 +20,208 @@ import modelo.mapa.Mapa;
 
 public class ControladorPrincipal {
 
-	private static final String RUTA_FUENTE_PIXEL = "/fuentes/PressStart2P-Regular.ttf";
-	private static final String RUTA_FUENTE_ICONOS = "/fuentes/Font Awesome 7 Free-Solid-900.otf";
+    private static final String RUTA_FUENTE_PIXEL = "/fuentes/PressStart2P-Regular.ttf";
+    private static final String RUTA_FUENTE_ICONOS = "/fuentes/Font Awesome 7 Free-Solid-900.otf";
 
-	private static final String RUTA_VISTA_INICIO = "/vista/Inicio.fxml";
-	private static final String RUTA_VISTA_CONFIGURACION = "/vista/.fxml";
-	private static final String RUTA_VISTA_CARGAR_PARTIDA = "/vista/PantallaCarga.fxml";
-	private static final String RUTA_VISTA_PARTIDA = "/vista/VentanaDePartida.fxml";
+    private static final String RUTA_VISTA_INICIO = "/vista/Inicio.fxml";
+    
+    private static final String RUTA_VISTA_CONFIGURACION = "/vista/ConfiguracionJugador.fxml";
+    private static final String RUTA_VISTA_CARGAR_PARTIDA = "/vista/PantallaCarga.fxml";
+    private static final String RUTA_VISTA_PARTIDA = "/vista/VentanaDePartida.fxml";
 
-	private static final String TITULO_VENTANA_PRINCIPAL = "EBOGE - Epic Board Game Evolution";
+    private static final String TITULO_VENTANA_PRINCIPAL = "EBOGE - Epic Board Game Evolution";
 
-	private static final double TAMANIO_FUENTE_BASE = 10.0;
+    private static final double TAMANIO_FUENTE_BASE = 10.0;
 
-	private Stage ventanaPrincipal;
-	private Partida partida;
+    private Stage ventanaPrincipal;
+    private Partida partida;
 
-	public ControladorPrincipal() {
-	}
+    
+    private List<Jugador> jugadoresPartida;
+    private int carasDadoPartida;
 
-	public void iniciarEBOGE(Stage stage) throws IOException {
+    public ControladorPrincipal() {
+    }
 
-		this.ventanaPrincipal = stage;
+    public void iniciarEBOGE(Stage stage) throws IOException {
+        this.ventanaPrincipal = stage;
+        configurarPantallaPrincipal(ventanaPrincipal);
+        
+        mostrarVentanaDeInicio();
+    }
 
-		configurarPantallaPrincipal(ventanaPrincipal);
-		mostrarVentanaDePartida();
-	}
+    private void configurarPantallaPrincipal(Stage stage) {
+        stage.setTitle(TITULO_VENTANA_PRINCIPAL);
+        stage.setResizable(false);
+        stage.setMaximized(true);
+    }
 
-	private void configurarPantallaPrincipal(Stage stage) {
-		stage.setTitle(TITULO_VENTANA_PRINCIPAL);
-		stage.setResizable(false);
-		stage.setMaximized(true);
-	}
+    public void mostrarVentanaDeInicio() {
+        try {
+            cargarFuentesGlobales();
+            
+            
+            FXMLLoader loader = inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_INICIO, TITULO_VENTANA_PRINCIPAL);
+            
+            
+            ControladorInicio inicioController = loader.getController();
+            inicioController.setOnJugar(() -> {
+                mostrarVentanaDeConfiguracion(); 
+            });
 
-	public void mostrarVentanaDeInicio() {
-		try {
-			cargarFuentesGlobales();
-			inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_INICIO, TITULO_VENTANA_PRINCIPAL);
-		} catch (Exception e) {
-			System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
+        } catch (Exception e) {
+            System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-	public void mostrarVentanaDeConfiguracion() {
-		// pendiente
-	}
+    
+    public void mostrarVentanaDeConfiguracion() {
+        try {
+            FXMLLoader loader = inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_CONFIGURACION, "EBOGE - Configuración");
+            
+            
+            ControladorConfiguracion configController = loader.getController();
+            configController.setControladorPrincipal(this); 
+            
+        } catch (Exception e) {
+            System.err.println("Error al cargar la configuración: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-	public void mostrarVentanaDeCarga() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(RUTA_VISTA_CARGAR_PARTIDA));
-			Parent raiz = loader.load();
+    
+    public void configurarPartida(List<Jugador> jugadores, int carasDado) {
+        this.jugadoresPartida = jugadores;
+        this.carasDadoPartida = carasDado;
+        System.out.println("Partida configurada con " + jugadores.size() + " jugadores y dado de " + carasDado + " caras.");
+    }
 
-			ControladorPantallaCarga cargaController = loader.getController();
+    public void mostrarVentanaDeCarga() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(RUTA_VISTA_CARGAR_PARTIDA));
+            Parent raiz = loader.load();
 
-			cargaController.setOnCargaTerminada(() -> {
-				mostrarVentanaDePartida();
-			});
+            ControladorPantallaCarga cargaController = loader.getController();
 
-			Scene escena = new Scene(raiz);
+            cargaController.setOnCargaTerminada(() -> {
+                mostrarVentanaDePartida();
+            });
 
-			ventanaPrincipal.setTitle("EBOGE - Cargando");
-			ventanaPrincipal.setScene(escena);
-			ventanaPrincipal.setResizable(false);
-			ventanaPrincipal.setMaximized(true);
-			ventanaPrincipal.show();
+            Scene escena = new Scene(raiz);
 
-		} catch (Exception e) {
-			System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
+            ventanaPrincipal.setTitle("EBOGE - Cargando");
+            ventanaPrincipal.setScene(escena);
+            ventanaPrincipal.setResizable(false);
+            ventanaPrincipal.setMaximized(true);
+            ventanaPrincipal.show();
 
-	private void mostrarVentanaDePartida() {
-		try {
-			FXMLLoader loader = inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_PARTIDA, "EBOGE - Partida");
-			ControladorVentanaDePartida controladorPartida = loader.getController();
+        } catch (Exception e) {
+            System.err.println("Error critico al iniciar la aplicación: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-			Platform.runLater(() -> {
-				double anchoTablero = controladorPartida.getAnchoTablero();
-				double altoTablero = controladorPartida.getAltoTablero();
+    private void mostrarVentanaDePartida() {
+        try {
+            FXMLLoader loader = inicializarInterfaz(ventanaPrincipal, RUTA_VISTA_PARTIDA, "EBOGE - Partida");
+            ControladorVentanaDePartida controladorPartida = loader.getController();
 
-				System.out.println("Ancho del Tablero: " + anchoTablero);
-				System.out.println("Alto del Tablero: " + altoTablero);
+            Platform.runLater(() -> {
+                double anchoTablero = controladorPartida.getAnchoTablero();
+                double altoTablero = controladorPartida.getAltoTablero();
 
-				crearPartidaDemo((int) anchoTablero, (int) altoTablero);
+                System.out.println("Ancho del Tablero: " + anchoTablero);
+                System.out.println("Alto del Tablero: " + altoTablero);
 
-				MotorDeTurnos motor = new MotorDeTurnos(partida);
+                
+                iniciarPartidaReal((int) anchoTablero, (int) altoTablero);
 
+                MotorDeTurnos motor = new MotorDeTurnos(partida);
+                controladorPartida.inicializarConMotor(motor);
+            });
 
-				controladorPartida.inicializarConMotor(motor);
+        } catch (Exception e) {
+            System.err.println("Error al iniciar la aplicación: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-			});
+    
+    private void iniciarPartidaReal(int anchoTablero, int altoTablero) {
+        if (this.partida != null) {
+            return;
+        }
 
-		} catch (Exception e) {
-			System.err.println("Error al iniciar la aplicación: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
+        
+        if (jugadoresPartida == null || jugadoresPartida.isEmpty()) {
+            System.err.println("Error: No hay jugadores configurados. Usando defaults.");
+            crearPartidaDemo(anchoTablero, altoTablero);
+            return;
+        }
 
-	private void crearPartidaDemo(int anchoTablero, int altoTablero) {
+        GeneradorDeMapa generador = new GeneradorDeMapa();
+        
+        Mapa mapaGenerado = generador.generarMapa(anchoTablero, altoTablero, carasDadoPartida);
 
-		if (this.partida != null) {
-			return;
-		}
+        this.partida = new Partida(jugadoresPartida, carasDadoPartida, mapaGenerado);
+    }
 
-		List<Jugador> jugadores = new ArrayList<>();
+    
+    private void crearPartidaDemo(int anchoTablero, int altoTablero) {
+        if (this.partida != null) return;
 
-		jugadores.add(new Jugador("fLOCH", ColorJugador.AZUL));
-		jugadores.add(new Jugador("DarthNetza", ColorJugador.ROJO));
-		jugadores.add(new Jugador("eLtATUADO", ColorJugador.AMARILLO));
+        List<Jugador> jugadores = new ArrayList<>();
+        jugadores.add(new Jugador("fLOCH", ColorJugador.AZUL));
+        jugadores.add(new Jugador("DarthNetza", ColorJugador.ROJO));
+        jugadores.add(new Jugador("eLtATUADO", ColorJugador.AMARILLO));
 
-		int carasDado = 5;
+        int carasDado = 6;
 
-		GeneradorDeMapa generador = new GeneradorDeMapa();
-		Mapa mapaGenerado = generador.generarMapa(anchoTablero, altoTablero, carasDado);
+        GeneradorDeMapa generador = new GeneradorDeMapa();
+        Mapa mapaGenerado = generador.generarMapa(anchoTablero, altoTablero, carasDado);
 
-		this.partida = new Partida(jugadores, carasDado, mapaGenerado);
-	}
+        this.partida = new Partida(jugadores, carasDado, mapaGenerado);
+    }
 
-	public void mostrarVentanaDeVictoria() {
-		// pendiente
-	}
+    public void mostrarVentanaDeVictoria() {
+        // pendiente
+    }
 
-	private void cargarFuentesGlobales() {
-		cargarFuente(RUTA_FUENTE_PIXEL);
-		cargarFuente(RUTA_FUENTE_ICONOS);
-	}
+    private void cargarFuentesGlobales() {
+        cargarFuente(RUTA_FUENTE_PIXEL);
+        cargarFuente(RUTA_FUENTE_ICONOS);
+    }
 
-	private void cargarFuente(String rutaRecurso) {
-		try (InputStream fontStream = getClass().getResourceAsStream(rutaRecurso)) {
-			if (fontStream != null) {
-				Font.loadFont(fontStream, TAMANIO_FUENTE_BASE);
-			} else {
-				System.err.println("Advertencia: No se pudo encontrar la fuente en " + rutaRecurso);
-			}
-		} catch (IOException e) {
-			System.err.println("Error al leer el flujo de la fuente: " + rutaRecurso);
-		}
-	}
+    private void cargarFuente(String rutaRecurso) {
+        try (InputStream fontStream = getClass().getResourceAsStream(rutaRecurso)) {
+            if (fontStream != null) {
+                Font.loadFont(fontStream, TAMANIO_FUENTE_BASE);
+            } else {
+                System.err.println("Advertencia: No se pudo encontrar la fuente en " + rutaRecurso);
+            }
+        } catch (IOException e) {
+            System.err.println("Error al leer el flujo de la fuente: " + rutaRecurso);
+        }
+    }
 
-	private FXMLLoader inicializarInterfaz(Stage escenario, String rutaEscena, String titulo) throws IOException {
-		if (getClass().getResource(rutaEscena) == null) {
-			throw new IOException("No se encontró el archivo FXML en: " + rutaEscena);
-		}
+    
+    private FXMLLoader inicializarInterfaz(Stage escenario, String rutaEscena, String titulo) throws IOException {
+        if (getClass().getResource(rutaEscena) == null) {
+            throw new IOException("No se encontró el archivo FXML en: " + rutaEscena);
+        }
 
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaEscena));
-		Parent raiz = loader.load();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaEscena));
+        Parent raiz = loader.load();
 
-		Scene escena = new Scene(raiz);
+        Scene escena = new Scene(raiz);
 
-		escenario.setTitle(titulo);
-		escenario.setScene(escena);
-		escenario.setResizable(false);
-		escenario.setMaximized(true);
-		escenario.show();
+        escenario.setTitle(titulo);
+        escenario.setScene(escena);
+        escenario.setResizable(false);
+        escenario.setMaximized(true);
+        escenario.show();
 
-		return loader;
-	}
-
+        return loader; 
+    }
 }

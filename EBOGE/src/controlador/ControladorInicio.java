@@ -59,6 +59,8 @@ public class ControladorInicio  implements Initializable{
 
 	private MediaPlayer reproductorMusica;
 	
+	private Runnable accionJugar;
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		btnMusica.setText(ICONO_SONIDO_ACTIVO);
@@ -77,19 +79,17 @@ public class ControladorInicio  implements Initializable{
 	    }
 	}
 	
+	public void setOnJugar(Runnable accion) {
+        this.accionJugar = accion;
+    }
 	
 	@FXML
 	public void cargarJuego(ActionEvent event) {
-		/*try {
-	        Parent root = FXMLLoader.load(getClass().getResource("configuracionAnimacion.fxml"));
-	        Stage stage = (Stage) btnJugar.getScene().getWindow();
-
-	        stage.setScene(new Scene(root));
-	        stage.show();
-
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } */
+		if (accionJugar != null) {
+            accionJugar.run();
+        } else {
+            System.err.println("Error: No se ha definido la acción para el botón Jugar.");
+        }
 	}
 	
 	@FXML 
