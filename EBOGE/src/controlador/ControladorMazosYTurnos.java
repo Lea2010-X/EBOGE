@@ -3,14 +3,22 @@ package controlador;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.stage.StageStyle;
 import modelo.MotorDeTurnos;
 import modelo.Partida;
 import modelo.cartas.Carta;
 import modelo.cartas.TipoCarta;
 import modelo.jugador.Jugador;
+import javafx.scene.control.ChoiceDialog;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import modelo.cartas.EfectoConObjetivo;
+import modelo.cartas.EfectoSinObjetivo;
 
 public class ControladorMazosYTurnos {
-
+	
 	private final Button btnAbrirMazoPropio;
 	private final Button btnAbrirMazoObjetivo;
 	private final Button btnAbrirMazoGlobal;
@@ -23,10 +31,12 @@ public class ControladorMazosYTurnos {
 
 	private final StackPane overlayCarta;
 	private final Button btnCartaGrande;
+	
+	private final Label lblMensajeEstado;
 
 	public ControladorMazosYTurnos(Button btnPropio, Button btnObjetivo, Button btnGlobal, Button btnMaestro,
 			Button btnLanzarDado, Label lblTurnoTexto, Label lblNombreJugador, Label lblResultadoDado,
-			StackPane overlayCarta, Button btnCartaGrande) {
+			StackPane overlayCarta, Button btnCartaGrande, Label lblMensajeEstado) {
 
 		this.btnAbrirMazoPropio = btnPropio;
 		this.btnAbrirMazoObjetivo = btnObjetivo;
@@ -40,6 +50,8 @@ public class ControladorMazosYTurnos {
 
 		this.overlayCarta = overlayCarta;
 		this.btnCartaGrande = btnCartaGrande;
+		
+		this.lblMensajeEstado = lblMensajeEstado;
 
 		if (overlayCarta != null) {
 			overlayCarta.setVisible(false);
@@ -55,68 +67,95 @@ public class ControladorMazosYTurnos {
 		if (lblResultadoDado != null)
 			lblResultadoDado.setText("-");
 	}
+	
+	private void notificarEvento(String mensaje) {
+        if (lblMensajeEstado != null) {
+            lblMensajeEstado.setText(mensaje);
+        }
+        System.out.println(mensaje);
+    }
 
-	public void actualizarLabelTurno(Jugador actual) {
-		
+	public void actualizarLabelTurno(Jugador actual) {		
 		lblTurnoTexto.setText("Turno de:");
 		lblNombreJugador.setText(actual.getNombre());
-
+		
+		// Aplicamos el color del jugador al texto para mejor feedback visual
 		String hex = actual.getColor();
 		lblNombreJugador.setStyle("-fx-text-fill: " + hex + ";" + "-fx-font-size: 20px;" + "-fx-font-weight: bold;");
 	}
+	
 
 	public void lanzarDado(MotorDeTurnos motor) {
-
-
 		Partida partida = motor.getPartida();
-		if (partida == null)
-			return;
+		if (partida == null) return;
 
-		btnLanzarDado.setDisable(true);
+		btnLanzarDado.setDisable(true); // Evitamos doble clic accidental
 
 		Jugador jugador = motor.iniciarTurno();
 		int pasos = motor.lanzarDado();
+		
+		mostrarResultadosDado(jugador, pasos);
+		
+		motor.calcularNuevaPosicion(pasos);
+		motor.ejecutarAccionEnCasilla();
+		
+		if (partida.getJuegoTerminado()) {
+	        manejarVictoria(jugador);
+	        return; 
+	    }
 
+	    verificarEfectosTrampa(jugador);	
+	    gestionarFlujoDeCartas(motor, partida);
+	}
+	
+	public void mostrarResultadosDado(Jugador jugador, int pasos) {
 		if (lblResultadoDado != null) {
 			lblResultadoDado.setText("Resultado: " + pasos);
 		}
+		notificarEvento(jugador.getNombre() + " avanzó " + pasos + " casillas.");
+	}
+	
+	private void manejarVictoria(Jugador jugador) {
+	    notificarEvento("¡VICTORIA! " + jugador.getNombre() + " HA GANADO LA PARTIDA ");
+	    btnLanzarDado.setDisable(true); 
+	}
 
-		System.out.println("Turno de " + jugador.getNombre() + " | Dado: " + pasos);
+	private void verificarEfectosTrampa(Jugador jugador) {
+	    if (jugador.estaInmovilizado()) {
+	        notificarEvento(jugador.getNombre() + " cayó en una trampa por " + jugador.getTurnosEfecto() + " turnos.");
+	    }
+	}
 
-		if (pasos <= 0) {
+	private void gestionarFlujoDeCartas(MotorDeTurnos motor, Partida partida) {
+	    TipoCarta tipoMazo = motor.getMazoHabilitado();
+	    actualizarBotonesMazos(tipoMazo);
 
-			motor.terminarTurno();
-			actualizarLabelTurno(partida.getJugadorActual());
-			btnLanzarDado.setDisable(false);
-			return;
-		}
+	    if (tipoMazo != null) {
+	    	// Esperamos interacción del usuario para robar carta
+	        notificarEvento("Puedes agarrar una carta de tipo " + tipoMazo);
+	    } else if (!motor.hayCartaPendiente()) {
+	    	// Si no hay carta que robar ni usar, el turno acaba automáticamente
+	        terminarTurnoUI(motor, partida);
+	    }
+	}
 
-		motor.calcularNuevaPosicion(pasos);
-		motor.ejecutarAccionEnCasilla();
-
-		TipoCarta tipoMazo = motor.getMazoHabilitado();
-		actualizarBotonesMazos(tipoMazo);
-
-		if (tipoMazo == null && !motor.hayCartaPendiente()) {
-			motor.terminarTurno();
-			actualizarLabelTurno(partida.getJugadorActual());
-			btnLanzarDado.setDisable(false);
-		} else if (tipoMazo != null) {
-			System.out.println("Puedes agarrar una carta de tipo " + tipoMazo);
-		}
+	private void terminarTurnoUI(MotorDeTurnos motor, Partida partida) {
+		ocultarCartaEnPantalla();
+	    motor.terminarTurno(); 
+	    actualizarLabelTurno(partida.getJugadorActual());
+	    btnLanzarDado.setDisable(false);
 	}
 
 	public void abrirMazo(TipoCarta tipo, MotorDeTurnos motor) {
-		if (motor == null)
-			return;
+		if (motor == null) return;
 
 		Carta carta = motor.robarCartaDeMazo(tipo);
 		if (carta == null) {
-			System.out.println("No puedes robar carta de tipo " + tipo + " en este momento.");
+			notificarEvento("No puedes robar una carta de tipo " + tipo + "en este momento");
 			return;
 		}
-
-		System.out.println("Has robado la carta: " + carta.getNombre());
+		
+		notificarEvento("Has robado una carta de tipo  " + carta.getNombre());
 		mostrarCartaEnPantalla(carta);
 		deshabilitarTodosLosMazos();
 	}
@@ -130,8 +169,7 @@ public class ControladorMazosYTurnos {
 
 	private void actualizarBotonesMazos(TipoCarta tipoMazo) {
 		deshabilitarTodosLosMazos();
-		if (tipoMazo == null)
-			return;
+		if (tipoMazo == null) return;
 
 		switch (tipoMazo) {
 		case PROPIA -> btnAbrirMazoPropio.setDisable(false);
@@ -142,8 +180,7 @@ public class ControladorMazosYTurnos {
 	}
 
 	private void mostrarCartaEnPantalla(Carta carta) {
-		if (overlayCarta == null || btnCartaGrande == null)
-			return;
+		if (overlayCarta == null || btnCartaGrande == null) return;
 
 		overlayCarta.setVisible(true);
 		overlayCarta.setManaged(true);
@@ -154,8 +191,7 @@ public class ControladorMazosYTurnos {
 					+ "-fx-background-repeat: no-repeat;" + "-fx-background-position: center;";
 			btnCartaGrande.setStyle(style);
 		}
-
-		btnLanzarDado.setDisable(true);
+		btnLanzarDado.setDisable(true); // Bloqueo mientras lee la carta
 	}
 
 	private void ocultarCartaEnPantalla() {
@@ -164,24 +200,62 @@ public class ControladorMazosYTurnos {
 			overlayCarta.setManaged(false);
 		}
 	}
-
+	
+	
 	public void usarCartaPendiente(MotorDeTurnos motor) {
-		if (motor == null)
-			return;
+	    if (motor == null) return;
+	    Partida partida = motor.getPartida();
 
-		Partida partida = motor.getPartida();
+	    if (!motor.hayCartaPendiente()) {
+	        ocultarCartaEnPantalla();
+	        btnLanzarDado.setDisable(false);
+	        return;
+	    }
 
-		if (!motor.hayCartaPendiente()) {
-			System.out.println("No hay carta pendiente por usar.");
-			ocultarCartaEnPantalla();
-			btnLanzarDado.setDisable(false);
-			return;
-		}
+	    Carta carta = motor.getCartaPendiente();
 
-		motor.usarCartaPendiente();
-		ocultarCartaEnPantalla();
-		motor.terminarTurno();
-		actualizarLabelTurno(partida.getJugadorActual());
-		btnLanzarDado.setDisable(false);
+	    // CASO 1: Efecto directo
+	    if (carta instanceof EfectoSinObjetivo) {
+	        motor.usarCartaPendienteSinObjetivo();
+	        terminarTurnoUI(motor, partida);
+	        return;
+	    }
+
+	    // CASO 2: Diálogo de selección
+	    if (carta instanceof EfectoConObjetivo) {
+	        List<Jugador> objetivos = new ArrayList<>(partida.getJugadores());
+	        objetivos.remove(partida.getJugadorActual());
+
+	        if (objetivos.isEmpty()) { btnLanzarDado.setDisable(false); return; }
+
+	        List<String> nombres = new ArrayList<>();
+	        for (Jugador jugador : objetivos) nombres.add(jugador.getNombre());
+	        
+	        //Mostrar la ventana de selección
+	        ChoiceDialog<String> dialog = new ChoiceDialog<>(nombres.get(0), nombres);
+	        dialog.initStyle(StageStyle.UNDECORATED);
+	        dialog.setHeaderText("Usando: " + carta.getNombre());
+	        dialog.setContentText("Elige víctima:");
+	        dialog.setGraphic(null);
+
+	        //Cargamos el CSS de Partida
+	        dialog.getDialogPane().getStylesheets().add(
+	            getClass().getResource("/vista/Partida.css").toExternalForm()
+	        );
+
+	        dialog.getDialogPane().getStyleClass().add("dialogo-gamer");
+
+
+	        Optional<String> result = dialog.showAndWait();
+	        if (result.isPresent()) {
+	            for (Jugador jugador : objetivos) {
+	                if (jugador.getNombre().equals(result.get())) {
+	                    motor.usarCartaPendienteConObjetivo(jugador);
+	                    terminarTurnoUI(motor, partida);
+	                    return;
+	                }
+	            }
+	        }
+	    }	   	    
 	}
 }

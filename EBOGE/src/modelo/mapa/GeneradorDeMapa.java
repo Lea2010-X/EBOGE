@@ -1,6 +1,5 @@
 package modelo.mapa;
 
-
 import java.io.FileWriter;
 
 public class GeneradorDeMapa {
@@ -15,12 +14,12 @@ public class GeneradorDeMapa {
 
     private int ladosDelDado;     // L
 
-    private int anchoCasilla;     // wc
-    private int altoCasilla;      // hc
+
+    private int anchoCasillaEstimado;  // wc aproximado
+    private int altoCasillaEstimado;   // hc aproximado
 
     private Casilla[][] casillas;
 
-    
     public Mapa generarMapa(int anchoPanel, int altoPanel, int ladosDelDado) {
 
         this.anchoPanel = anchoPanel;
@@ -33,7 +32,7 @@ public class GeneradorDeMapa {
 
         recorrerEspiralYCrearCasillas();
 
-        return new Mapa(cantidadColumnas, cantidadFilas, anchoCasilla, altoCasilla, casillas);
+        return new Mapa(cantidadColumnas, cantidadFilas, casillas);
     }
 
     private void calcularDimensionesLogicas() {
@@ -42,7 +41,8 @@ public class GeneradorDeMapa {
         double casillasTeoricas = RONDAS_ESPERADAS * esperanzaDelDado;
         int cantidadCasillas = (int) Math.round(casillasTeoricas);
 
-        double filasAproximadas = Math.sqrt((cantidadCasillas * (double) altoPanel) / (double) anchoPanel);
+        double filasAproximadas =
+                Math.sqrt((cantidadCasillas * (double) altoPanel) / (double) anchoPanel);
         int filas = Math.max(1, (int) Math.round(filasAproximadas));
 
         int columnas = (int) Math.ceil(cantidadCasillas / (double) filas);
@@ -50,11 +50,19 @@ public class GeneradorDeMapa {
         cantidadFilas = filas;
         cantidadColumnas = columnas;
 
-        anchoCasilla = anchoPanel / cantidadColumnas;
-        altoCasilla = altoPanel / cantidadFilas;
+        anchoCasillaEstimado = anchoPanel / cantidadColumnas;
+        altoCasillaEstimado = altoPanel / cantidadFilas;
     }
 
-    //Métodos privados
+    public int getAnchoCasillaEstimado() {
+        return anchoCasillaEstimado;
+    }
+
+    public int getAltoCasillaEstimado() {
+        return altoCasillaEstimado;
+    }
+
+
     private void recorrerEspiralYCrearCasillas() {
 
         int limiteSuperior = 0;
@@ -64,7 +72,9 @@ public class GeneradorDeMapa {
         int indiceActual = 0;
         int totalCasillas = cantidadFilas * cantidadColumnas;
 
-        while (limiteSuperior <= limiteInferior && limiteIzquierdo <= limiteDerecho && indiceActual < totalCasillas) {
+        while (limiteSuperior <= limiteInferior
+                && limiteIzquierdo <= limiteDerecho
+                && indiceActual < totalCasillas) {
 
             // Bajar por columna izquierda
             for (int fila = limiteSuperior; fila <= limiteInferior && indiceActual < totalCasillas; fila++) {
@@ -106,5 +116,3 @@ public class GeneradorDeMapa {
         casillas[fila][columna] = new Casilla(tipo, indiceCasilla);
     }
 }
-
-

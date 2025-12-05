@@ -194,7 +194,7 @@ public class ControladorTablero implements MovimientoListener, CambioCasillaList
         if (celda == null) return;
 
         if (!celda.getChildren().isEmpty()) {
-            celda.getChildren().remove(0); // quita el fondo anterior
+            celda.getChildren().remove(0); 
         }
 
         Image img = new Image(getClass().getResourceAsStream(nuevoTipo.getRutaImagen()));
@@ -215,7 +215,7 @@ public class ControladorTablero implements MovimientoListener, CambioCasillaList
     }
 
 	@Override
-	public void movimiento(Jugador jugador, int posicionAnterior, int nuevaPosicion) {
-		 moverFicha(jugador, posicionAnterior, nuevaPosicion);
+	public void movimiento(Jugador jugador, int posAnterior, int nuevaPos) {
+		 moverFicha(jugador, posAnterior, nuevaPos);
 	}
 }
