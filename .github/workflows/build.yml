@@ -18,13 +18,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up JDK
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      # 🔹 Compilar SOLO las clases que no usan JavaFX (modelo)
+      # 🔹 Compilar SOLO las clases de modelo (sin DistorsionDelEntorno)
       - name: Compile Java sources (modelo)
         shell: pwsh
         run: |
@@ -32,7 +32,9 @@ jobs:
           New-Item -ItemType Directory -Force -Path build | Out-Null
 
           Write-Host "Buscando archivos .java en EBOGE/src/modelo..."
-          $sources = Get-ChildItem -Recurse -Filter *.java EBOGE/src/modelo | ForEach-Object { $_.FullName }
+          $sources = Get-ChildItem -Recurse -Filter *.java EBOGE/src/modelo `
+            | Where-Object { $_.Name -ne 'DistorsionDelEntorno.java' } `
+            | ForEach-Object { $_.FullName }
 
           if (-not $sources -or $sources.Count -eq 0) {
             Write-Host "No se encontraron archivos .java en EBOGE/src/modelo"
