@@ -24,7 +24,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # 🔹 Compilar SOLO las clases de modelo (sin DistorsionDelEntorno)
+      # 🔹 Compilar TODAS las clases de modelo (ya sin dependencias raras)
       - name: Compile Java sources (modelo)
         shell: pwsh
         run: |
@@ -32,9 +32,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path build | Out-Null
 
           Write-Host "Buscando archivos .java en EBOGE/src/modelo..."
-          $sources = Get-ChildItem -Recurse -Filter *.java EBOGE/src/modelo `
-            | Where-Object { $_.Name -ne 'DistorsionDelEntorno.java' } `
-            | ForEach-Object { $_.FullName }
+          $sources = Get-ChildItem -Recurse -Filter *.java EBOGE/src/modelo | ForEach-Object { $_.FullName }
 
           if (-not $sources -or $sources.Count -eq 0) {
             Write-Host "No se encontraron archivos .java en EBOGE/src/modelo"
