@@ -1,0 +1,1 @@
+var CodeMR_ProjectMetrics = {"Project Name":"EBOGE", "Number of Highly Problematic Classes":0, "Number of Entities":40, "Number of Problematic Classes":3, "Class Lines of Code":1402, "Number of External Packages":27, "Number of Packages":9, "Number of External Entities":142}

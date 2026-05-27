@@ -1,0 +1,1 @@
+var CodeMR_ProjectMetrics = {"Project Name":"EBOGE working set: {modelo}", "Number of Highly Problematic Classes":0, "Number of Entities":32, "Number of Problematic Classes":1, "Class Lines of Code":689, "Number of External Packages":4, "Number of Packages":8, "Number of External Entities":20}
